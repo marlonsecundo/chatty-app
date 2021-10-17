@@ -20,7 +20,9 @@ export const AuthProvider: React.FC = ({ children }) => {
 
       if (!userToken) throw NullException("signUserWithGoogle - Token Null");
 
-      const loggedUser = await getUser(userToken!);
+      const loggedUser = await getUser(userToken);
+
+      if (!loggedUser) throw NullException("signUserWithGoogle - User Null");
 
       setToken(userToken);
       setUser(loggedUser);

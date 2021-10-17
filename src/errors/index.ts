@@ -1,20 +1,22 @@
 interface IException {
+  code?: string;
   message: string;
   name: string;
-  stack?: any;
+  data?: any;
 }
 
-export function NullException(message: string, stack?: any): IException {
+export function NullException(message: string, data?: any): IException {
   const name = "NullException";
 
-  return { message, name, stack };
+  return { message, name, data };
 }
 
 export function AxiosRequestException(
   message: string,
-  stack?: any
+  code: string,
+  data?: any
 ): IException {
   const name = "AxiosRequestException";
 
-  return { message, name, stack };
+  return { message, name, code, data };
 }
