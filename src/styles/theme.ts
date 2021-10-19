@@ -1,10 +1,7 @@
 import { DarkTheme, DefaultTheme, Theme } from "@react-navigation/native";
 import { rfValue } from "../utils/responsive-fontsize";
 
-export const darkTheme: Theme = {
-  ...DarkTheme,
-  colors: { ...DarkTheme.colors, background: "#202128" },
-};
+export const darkTheme: Theme = DarkTheme;
 export const lightTheme: Theme = DefaultTheme;
 
 export default {

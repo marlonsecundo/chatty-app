@@ -28,5 +28,6 @@ export const LayoutContainer = styled.View<ContainerProps>`
   position: ${position ?? "relative"};
   bottom: ${sbottom ?? "auto"};
   height: ${height ?? "auto"};
+
   `}
 `;
