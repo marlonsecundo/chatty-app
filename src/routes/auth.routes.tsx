@@ -1,11 +1,31 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SignInScreen from "../modules/auth/screens/signin";
+import AuthContext from "../contexts/auth-context";
+import LoadingScreen from "../modules/auth/screens/loading";
 
 const Stack = createNativeStackNavigator();
 
 function AuthStackRoutes() {
-  return (
+  const [loading, setLoading] = useState(true);
+
+  const { checkIsLoggedIn } = useContext(AuthContext);
+
+  useEffect(() => {
+    checkIsLoggedIn().catch(() => {
+      setLoading(false);
+    });
+  }, []);
+
+  const stack = loading ? (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Loading"
+        component={LoadingScreen}
+        options={{ header: () => null }}
+      />
+    </Stack.Navigator>
+  ) : (
     <Stack.Navigator>
       <Stack.Screen
         name="SignIn"
@@ -14,6 +34,8 @@ function AuthStackRoutes() {
       />
     </Stack.Navigator>
   );
+
+  return stack;
 }
 
 export default AuthStackRoutes;

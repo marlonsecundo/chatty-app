@@ -4,6 +4,14 @@ import { rfValue } from "../utils/responsive-fontsize";
 export const darkTheme: Theme = DarkTheme;
 export const lightTheme: Theme = DefaultTheme;
 
+export type ThemeColors =
+  | "primary"
+  | "background"
+  | "card"
+  | "text"
+  | "border"
+  | "notification";
+
 export default {
   colors: darkTheme.colors,
   fonts: {

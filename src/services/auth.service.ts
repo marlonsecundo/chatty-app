@@ -62,9 +62,9 @@ export async function getUserTokenWithGoogle(): Promise<string | null> {
   }
 }
 
-export async function getUser(token: string): Promise<IUser | null> {
+export async function getUser(token: string): Promise<User | null> {
   try {
-    const response = await api.get<IUser>("/google/user", {
+    const response = await api.get<User>("/google/user", {
       headers: {
         Authorization: "Bearer " + token,
       },

@@ -1,11 +1,11 @@
 import styled from "styled-components/native";
+import { StyledText } from "./styled-text";
 
-export const Body = styled.Text`
+export const Body = styled(StyledText)`
   font: ${({ theme }) => theme.fonts.body};
-  color: ${({ theme }) => theme.colors.text};
+  ${({ fontFamily }) => (fontFamily ? `font-family: ${fontFamily}` : "")};
 `;
 
-export const BodyMenu = styled.Text`
+export const BodyMenu = styled(StyledText)`
   font: ${({ theme }) => theme.fonts.bodyMenu};
-  color: ${({ theme }) => theme.colors.text};
 `;

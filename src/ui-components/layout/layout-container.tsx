@@ -8,6 +8,16 @@ interface ContainerProps {
   height?: string;
   position?: string;
   sbottom?: string;
+  sflex?: number;
+  spadding?: string;
+  marginTop?: string;
+  marginLeft?: string;
+  marginRight?: string;
+  marginBottom?: string;
+  paddingBottom?: string;
+  paddingTop?: string;
+
+  backgroundColor?: string;
 }
 
 export const LayoutContainer = styled.View<ContainerProps>`
@@ -19,15 +29,37 @@ export const LayoutContainer = styled.View<ContainerProps>`
     position,
     sbottom,
     height,
+    sflex,
+    spadding,
+    marginTop,
+    marginLeft,
+    marginRight,
+    marginBottom,
+    paddingBottom,
+    paddingTop,
+    backgroundColor,
   }) => `
   margin: ${smargin ?? "0px"};
   justify-content: ${justifyContent ?? "flex-start"};
-  align-items: ${alignItems ?? "center"};
-  width: ${width ?? "100%"};
-
+  align-items: ${alignItems ?? "stretch"};
   position: ${position ?? "relative"};
   bottom: ${sbottom ?? "auto"};
   height: ${height ?? "auto"};
-
+  width: ${width ?? "auto"};
+  flex: ${sflex ?? "none"};
+  padding: ${spadding ?? "0px"};
+  background-color: ${backgroundColor ?? "transparent"};
+  
   `}
+
+  ${({ paddingBottom }) =>
+    paddingBottom ? `padding-bottom: ${paddingBottom}` : ""};
+
+  ${({ paddingTop }) => (paddingTop ? `padding-top: ${paddingTop}` : "")};
+
+  ${({ marginTop }) => (marginTop ? ` margin-top: ${marginTop}` : "")};
+  ${({ marginLeft }) => (marginLeft ? ` margin-left: ${marginLeft}` : "")};
+  ${({ marginRight }) => (marginRight ? ` margin-right: ${marginRight}` : "")};
+  ${({ marginBottom }) =>
+    marginBottom ? ` margin-bottom: ${marginBottom}` : ""};
 `;

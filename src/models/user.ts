@@ -1,4 +1,5 @@
-interface IUser {
+interface User {
   email: string;
-  profile?: IProfile;
+  profile?: Profile;
+  userName?: string;
 }

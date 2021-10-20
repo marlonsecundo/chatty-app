@@ -8,7 +8,7 @@ import { darkTheme } from "../styles/theme";
 const Routes: React.FC = () => {
   const { signed } = useContext(AuthContext);
 
-  const stackRoutes = true ? <HomeStackRoutes /> : <AuthStackRoutes />;
+  const stackRoutes = signed ? <HomeStackRoutes /> : <AuthStackRoutes />;
 
   return (
     <NavigationContainer theme={darkTheme}>{stackRoutes}</NavigationContainer>

@@ -8,12 +8,17 @@ import theme from "./src/styles/theme";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Routes from "./src/routes";
 import { AuthProvider } from "./src/contexts/auth-context";
-import { Roboto_500Medium, Roboto_400Regular } from "@expo-google-fonts/roboto";
+import {
+  Roboto_500Medium,
+  Roboto_400Regular,
+  Roboto_700Bold,
+} from "@expo-google-fonts/roboto";
 
 export default function App() {
   let [fontsLoaded] = useFonts({
     Roboto_500Medium,
     Roboto_400Regular,
+    Roboto_700Bold,
   });
 
   if (!fontsLoaded) {

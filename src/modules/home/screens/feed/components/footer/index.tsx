@@ -1,22 +1,21 @@
 import { FeatherIcon } from "@/src/ui-components/icon";
 import IconButton from "@/src/ui-components/icon-button";
-import { ColumnContainer } from "@/src/ui-components/layout/column-container";
-import { RowContainer } from "@/src/ui-components/layout/row-container";
+import { Column } from "@/src/ui-components/layout/column";
 import React from "react";
-import { FooterWrapper, ActionsWrapper, StyledBorder } from "./styles";
+import { FooterWrapper, ActionsWrapper } from "./styles";
 
 const Footer: React.FC = () => {
   return (
     <FooterWrapper>
-      <ColumnContainer>
-        <StyledBorder></StyledBorder>
+      <Column>
         <ActionsWrapper>
           <IconButton
+            withBackgroundColor={false}
             onPress={() => {}}
             icon={<FeatherIcon name="send"></FeatherIcon>}
           ></IconButton>
         </ActionsWrapper>
-      </ColumnContainer>
+      </Column>
     </FooterWrapper>
   );
 };

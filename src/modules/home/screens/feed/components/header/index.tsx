@@ -1,8 +1,8 @@
-import { AntDesignIcon } from "@/src/ui-components/icon";
+import { AntDesignIcon, FeatherIcon } from "@/src/ui-components/icon";
 import IconButton from "@/src/ui-components/icon-button";
-import { CenterContainer } from "@/src/ui-components/layout/center-container";
-import { ColumnContainer } from "@/src/ui-components/layout/column-container";
-import { RowContainer } from "@/src/ui-components/layout/row-container";
+import { Center } from "@/src/ui-components/layout/center";
+import { Column } from "@/src/ui-components/layout/column";
+import { Row } from "@/src/ui-components/layout/row";
 import { Headline } from "@/src/ui-components/text/headline";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -12,23 +12,21 @@ const Header: React.FC = () => {
   return (
     <HeaderWrapper>
       <SafeAreaView>
-        <ColumnContainer>
-          <RowContainer justifyContent="space-between">
+        <Column>
+          <Row width="100%" justifyContent="space-between">
             <IconButton
               withBackgroundColor={false}
-              icon={<AntDesignIcon name="arrowleft"></AntDesignIcon>}
+              icon={<FeatherIcon name="arrow-left"></FeatherIcon>}
             ></IconButton>
+
+            <Headline size="24">Feed</Headline>
 
             <IconButton
               withBackgroundColor={false}
-              icon={<AntDesignIcon name="ellipsis1"></AntDesignIcon>}
+              icon={<FeatherIcon name="more-horizontal"></FeatherIcon>}
             ></IconButton>
-          </RowContainer>
-        </ColumnContainer>
-
-        <CenterContainer>
-          <Headline size="24">Feed</Headline>
-        </CenterContainer>
+          </Row>
+        </Column>
       </SafeAreaView>
     </HeaderWrapper>
   );
