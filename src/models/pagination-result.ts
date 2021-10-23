@@ -8,3 +8,10 @@ export interface PaginationResult<T> {
     firstPage: number;
   };
 }
+
+export interface FetchPaginationProps {
+  page: number;
+  limit: number;
+}
+
+export type AxiosPaginationResult<T> = Promise<PaginationResult<T> | null>;

@@ -26,6 +26,7 @@ const SignInScreen: React.FC = () => {
         <IconButton
           icon={<AntDesignIcon name="google"></AntDesignIcon>}
           text="ENTRAR"
+          size="big"
           onPress={signUserWithGoogle}
         ></IconButton>
       </LayoutContainer>

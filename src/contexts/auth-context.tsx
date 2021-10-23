@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useEffect, useState } from "react";
-import { NullException } from "../errors";
+import { NullException } from "../exceptions";
 import {
   getAsyncStorageData,
   storeAsyncStorageData,
@@ -16,18 +16,20 @@ interface AuthContextProps {
 const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
 
 export const AuthProvider: React.FC = ({ children }) => {
-  const [user, setUser] = useState<User | null>();
-  const [token, setToken] = useState<string | null>();
+  const [user, setUser] = useState<User>();
+  const [token, setToken] = useState<string>();
 
   const signUserWithGoogle = useCallback(async () => {
     try {
       const userToken = await getUserTokenWithGoogle();
 
-      if (!userToken) throw NullException("signUserWithGoogle - Token Null");
+      if (!userToken)
+        throw NullException({ message: "signUserWithGoogle - Token Null" });
 
       const loggedUser = await getUser(userToken);
 
-      if (!loggedUser) throw NullException("signUserWithGoogle - User Null");
+      if (!loggedUser)
+        throw NullException({ message: "signUserWithGoogle - User Null" });
 
       setToken(userToken);
       setUser(loggedUser);
@@ -42,11 +44,13 @@ export const AuthProvider: React.FC = ({ children }) => {
     try {
       const data = await getAsyncStorageData("@USER_TOKEN");
 
-      if (!data?.value) throw NullException("signInWithToken - Token Null");
+      if (!data?.value)
+        throw NullException({ message: "signInWithToken - Token Null" });
 
       const loggedUser = await getUser(data.value);
 
-      if (!loggedUser) throw NullException("signUserWithGoogle - User Null");
+      if (!loggedUser)
+        throw NullException({ message: "signUserWithGoogle - User Null" });
 
       setToken(data.value);
       setUser(loggedUser);
@@ -61,7 +65,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ signed, signUserWithGoogle, checkIsLoggedIn }}
+      value={{ signed, signUserWithGoogle, checkIsLoggedIn, token }}
     >
       {children}
     </AuthContext.Provider>

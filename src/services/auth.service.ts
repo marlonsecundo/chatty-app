@@ -1,10 +1,10 @@
 import api from "./api";
 import * as WebBrowser from "expo-web-browser";
 import { Linking } from "react-native";
-import { AxiosRequestException, NullException } from "../errors";
+import { AxiosRequestException, NullException } from "../exceptions";
 import Constants from "expo-constants";
-import { Link } from "@react-navigation/native";
 import axios, { AxiosError } from "axios";
+import getAxiosError from "../utils/get-axios-error";
 
 export async function getUserTokenWithGoogle(): Promise<string | null> {
   let userToken: string | null = null;
@@ -52,13 +52,9 @@ export async function getUserTokenWithGoogle(): Promise<string | null> {
 
     return userToken;
   } catch (err) {
-    console.log("AxiosRequestException - getUserTokenWithGoogle");
+    console.log("ERROR - getUserTokenWithGoogle");
 
-    if (axios.isAxiosError(err)) {
-      throw AxiosRequestException(err.message, err.code ?? "", err);
-    }
-
-    throw err;
+    throw getAxiosError(err);
   }
 }
 
@@ -72,15 +68,8 @@ export async function getUser(token: string): Promise<User | null> {
 
     return response.data;
   } catch (err: AxiosError | unknown) {
-    console.log("AxiosRequestException - getUser");
+    console.log("ERROR - getUser");
 
-    if (axios.isAxiosError(err)) {
-      throw AxiosRequestException(
-        err.message,
-        err.response?.status?.toString() ?? "",
-        err
-      );
-    }
-    throw err;
+    throw getAxiosError(err);
   }
 }

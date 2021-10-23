@@ -31,12 +31,6 @@ export const LayoutContainer = styled.View<ContainerProps>`
     height,
     sflex,
     spadding,
-    marginTop,
-    marginLeft,
-    marginRight,
-    marginBottom,
-    paddingBottom,
-    paddingTop,
     backgroundColor,
   }) => `
   margin: ${smargin ?? "0px"};

@@ -1,18 +1,21 @@
+import { PostProvider } from "@/src/contexts/post-context";
 import { Column } from "@/src/ui-components/layout/column";
 import React from "react";
-import FeedList from "./components/feed-list";
 import Footer from "./components/footer";
 import Header from "./components/header";
+import PostsFeedList from "./components/posts-feed-list";
 
 // import { Container } from './styles';
 
 const FeedScreen: React.FC = () => {
   return (
-    <Column height="100%" alignItems="flex-start">
-      <Header></Header>
-      <FeedList></FeedList>
-      <Footer></Footer>
-    </Column>
+    <PostProvider>
+      <Column height="100%" alignItems="flex-start">
+        <Header></Header>
+        <PostsFeedList></PostsFeedList>
+        <Footer></Footer>
+      </Column>
+    </PostProvider>
   );
 };
 

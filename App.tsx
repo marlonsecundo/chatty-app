@@ -14,6 +14,8 @@ import {
   Roboto_700Bold,
 } from "@expo-google-fonts/roboto";
 
+import { RootSiblingParent } from "react-native-root-siblings";
+
 export default function App() {
   let [fontsLoaded] = useFonts({
     Roboto_500Medium,
@@ -26,13 +28,15 @@ export default function App() {
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <SafeAreaProvider>
-        <AuthProvider>
-          <Routes></Routes>
-        </AuthProvider>
-      </SafeAreaProvider>
-    </ThemeProvider>
+    <RootSiblingParent>
+      <ThemeProvider theme={theme}>
+        <SafeAreaProvider>
+          <AuthProvider>
+            <Routes></Routes>
+          </AuthProvider>
+        </SafeAreaProvider>
+      </ThemeProvider>
+    </RootSiblingParent>
   );
 }
 
