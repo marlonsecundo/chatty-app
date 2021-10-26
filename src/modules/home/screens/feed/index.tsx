@@ -5,8 +5,6 @@ import Footer from "./components/footer";
 import Header from "./components/header";
 import PostsFeedList from "./components/posts-feed-list";
 
-// import { Container } from './styles';
-
 const FeedScreen: React.FC = () => {
   return (
     <PostProvider>

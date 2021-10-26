@@ -1,5 +1,5 @@
 import AuthContext from "@/src/contexts/auth-context";
-import PostContext from "@/src/contexts/post-context";
+import PostContext, { usePost } from "@/src/contexts/post-context";
 import React, { useCallback, useContext, useEffect } from "react";
 import { FeedWrapper, StyledFlatList } from "./styles";
 import Toast from "react-native-root-toast";
@@ -10,7 +10,7 @@ import LoadingPosts from "../loading-posts";
 
 const PostsFeedList: React.FC = () => {
   const { token } = useContext(AuthContext);
-  const { posts, loadPosts, loading, postPagResult } = useContext(PostContext);
+  const { posts, loadPosts, postPagResult } = usePost();
 
   const handleLoadPosts = useCallback(
     async (page: number, clearBefore: boolean = false) => {

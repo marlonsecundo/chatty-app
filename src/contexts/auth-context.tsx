@@ -1,5 +1,11 @@
-import React, { createContext, useCallback, useEffect, useState } from "react";
-import { NullException } from "../exceptions";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { ContextHookException, NullException } from "../exceptions";
 import {
   getAsyncStorageData,
   storeAsyncStorageData,
@@ -71,5 +77,15 @@ export const AuthProvider: React.FC = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+
+  if (!context) {
+    throw ContextHookException({ hookName: "useAuth" });
+  }
+
+  return context;
+}
 
 export default AuthContext;

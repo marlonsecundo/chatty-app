@@ -31,3 +31,13 @@ export function UnknowException(args: Exception): Exception {
 
   return { ...args, name };
 }
+
+export function ContextHookException({
+  hookName,
+}: {
+  hookName: string;
+}): Exception {
+  const name = "ContextException";
+
+  return { name, message: hookName + "must be used within a Provider" };
+}

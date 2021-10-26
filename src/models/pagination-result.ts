@@ -15,3 +15,5 @@ export interface FetchPaginationProps {
 }
 
 export type AxiosPaginationResult<T> = Promise<PaginationResult<T> | null>;
+
+export type AxiosPostResult<T> = Promise<T | null>;
