@@ -8,6 +8,8 @@ export const TextInputWrapper = styled(Row)`
   background-color: ${({ theme }) => theme.colors.card};
 
   padding: ${rfValuePX(10)} ${rfValuePX(10)};
+
+  flex: 1;
 `;
 
 export const StyledTextInput = styled.TextInput`

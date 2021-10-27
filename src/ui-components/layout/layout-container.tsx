@@ -8,6 +8,8 @@ interface ContainerProps {
   height?: string;
   position?: string;
   sbottom?: string;
+  sright?: string;
+
   sflex?: number;
   spadding?: string;
   marginTop?: string;
@@ -16,6 +18,7 @@ interface ContainerProps {
   marginBottom?: string;
   paddingBottom?: string;
   paddingTop?: string;
+  overflow?: string;
 
   backgroundColor?: string;
 }
@@ -32,20 +35,22 @@ export const LayoutContainer = styled.View<ContainerProps>`
     sflex,
     spadding,
     backgroundColor,
+    sright,
+    overflow,
   }) => `
   margin: ${smargin ?? "0px"};
   justify-content: ${justifyContent ?? "flex-start"};
   align-items: ${alignItems ?? "stretch"};
   position: ${position ?? "relative"};
   bottom: ${sbottom ?? "auto"};
+  right: ${sright ?? "auto"};
   height: ${height ?? "auto"};
   width: ${width ?? "auto"};
   flex: ${sflex ?? "none"};
   padding: ${spadding ?? "0px"};
   background-color: ${backgroundColor ?? "transparent"};
-  
+  overflow: ${overflow ?? "visible"}
   `}
-
   ${({ paddingBottom }) =>
     paddingBottom ? `padding-bottom: ${paddingBottom}` : ""};
 

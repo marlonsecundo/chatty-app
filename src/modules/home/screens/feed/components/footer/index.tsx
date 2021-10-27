@@ -8,12 +8,13 @@ import { LayoutContainer } from "@/src/ui-components/layout/layout-container";
 import { Body } from "@/src/ui-components/text/body";
 import { Caption } from "@/src/ui-components/text/caption";
 import { getExceptionFromError } from "@/src/utils/get-exception-from-error";
-import { rfValuePX } from "@/src/utils/responsive-fontsize";
+import { rfValue, rfValuePX } from "@/src/utils/responsive-fontsize";
 import { StorePostSchema } from "@/src/validators/post.validator";
-import { Formik } from "formik";
-import React, { useCallback } from "react";
+import { Formik, FormikBag, FormikHelpers } from "formik";
+import { MotiView } from "moti";
+import React, { useCallback, useState } from "react";
 import Toast from "react-native-root-toast";
-import TextInputForm from "./components/text-input-form";
+import TextFormInput from "./components/text-form-input";
 import { FooterWrapper, ActionsWrapper } from "./styles";
 
 export interface StorePostFormValueProps {
@@ -24,13 +25,20 @@ const Footer: React.FC = () => {
   const { storePost } = usePost();
   const { token } = useAuth();
 
+  const [inputVisible, setInputVisible] = useState(false);
+
   const onSubmit = useCallback(
-    async (values: StorePostFormValueProps) => {
+    async (
+      values: StorePostFormValueProps,
+      actions: FormikHelpers<StorePostFormValueProps>
+    ) => {
       try {
         const post = await storePost({
           content: values.content,
           token: token ?? "",
         });
+
+        actions.resetForm();
       } catch (err) {
         const exception = getExceptionFromError(err);
 
@@ -43,6 +51,23 @@ const Footer: React.FC = () => {
     [token]
   );
 
+  const renderAnimatedInput = () => {
+    const height = inputVisible ? rfValue(100) : 0;
+
+    return (
+      <MotiView animate={{ height }}>
+        <LayoutContainer
+          overflow="hidden"
+          position="absolute"
+          width="100%"
+          height="100%"
+        >
+          <TextFormInput></TextFormInput>
+        </LayoutContainer>
+      </MotiView>
+    );
+  };
+
   return (
     <FooterWrapper>
       <Formik<StorePostFormValueProps>
@@ -51,20 +76,40 @@ const Footer: React.FC = () => {
         validationSchema={StorePostSchema}
         validateOnChange={false}
       >
-        {({ handleSubmit }) => {
+        {({ handleSubmit, setErrors, isSubmitting }) => {
           return (
             <Column
               smargin={`0px ${rfValuePX(10)} ${rfValuePX(10)} ${rfValuePX(10)}`}
             >
-              <ActionsWrapper>
+              <ActionsWrapper alignItems="center">
                 <IconButton
                   withBackgroundColor={false}
-                  onPress={() => handleSubmit()}
+                  onPress={() => {
+                    if (!inputVisible) {
+                      setInputVisible(true);
+                      return;
+                    }
+                    if (!isSubmitting) handleSubmit();
+                  }}
                   icon={<FeatherIcon name="send"></FeatherIcon>}
                 ></IconButton>
+
+                <LayoutContainer sright="0px" position="absolute">
+                  <IconButton
+                    withBackgroundColor={false}
+                    onPress={() => {
+                      if (inputVisible) {
+                        setErrors({ content: "" });
+                        setInputVisible(false);
+                        return;
+                      }
+                    }}
+                    icon={<FeatherIcon name="x"></FeatherIcon>}
+                  ></IconButton>
+                </LayoutContainer>
               </ActionsWrapper>
 
-              <TextInputForm></TextInputForm>
+              {renderAnimatedInput()}
             </Column>
           );
         }}

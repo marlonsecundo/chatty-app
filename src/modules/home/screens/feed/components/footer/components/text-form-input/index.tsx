@@ -4,24 +4,33 @@ import { Column } from "@/src/ui-components/layout/column";
 import { LayoutContainer } from "@/src/ui-components/layout/layout-container";
 import { Body } from "@/src/ui-components/text/body";
 import { Caption } from "@/src/ui-components/text/caption";
-import { rfValuePX } from "@/src/utils/responsive-fontsize";
+import { rfValue, rfValuePX } from "@/src/utils/responsive-fontsize";
 import React from "react";
 import { StyledTextInput, TextInputWrapper } from "./styles";
 
 import { useFormikContext } from "formik";
 import { StorePostFormValueProps } from "../..";
+import { AnimatePresence, MotiView } from "moti";
 
-const TextInputForm: React.FC = () => {
+const TextFormInput: React.FC = () => {
   const { errors, handleChange, handleBlur, values, setErrors, setFieldValue } =
     useFormikContext<StorePostFormValueProps>();
 
-  return (
-    <Column>
-      {errors.content && (
-        <LayoutContainer marginBottom={rfValuePX(5)}>
+  const renderAnimatedError = () => {
+    const height = errors.content ? rfValue(25) : 0;
+
+    return (
+      <MotiView animate={{ height }}>
+        <LayoutContainer position="absolute">
           <Body>{errors.content}</Body>
         </LayoutContainer>
-      )}
+      </MotiView>
+    );
+  };
+
+  return (
+    <Column sflex={1}>
+      {renderAnimatedError()}
       <TextInputWrapper alignItems="center" justifyContent="space-between">
         <StyledTextInput
           onChangeText={handleChange("content")}
@@ -47,4 +56,4 @@ const TextInputForm: React.FC = () => {
   );
 };
 
-export default TextInputForm;
+export default TextFormInput;
