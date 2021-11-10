@@ -1,4 +1,7 @@
+import { LayoutContainer } from "@/src/ui-components/layout/layout-container";
+import LazyImage from "@/src/ui-components/lazy-image";
 import { rfValuePX } from "@/src/utils/responsive-fontsize";
+import { RectButton } from "react-native-gesture-handler";
 import styled from "styled-components/native";
 
 export const HeaderWrapper = styled.View`

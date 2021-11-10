@@ -21,7 +21,7 @@ export interface StorePostFormValueProps {
   content: string;
 }
 
-const Footer: React.FC = () => {
+const FeedFooter: React.FC = () => {
   const { storePost } = usePost();
   const { token } = useAuth();
 
@@ -118,4 +118,4 @@ const Footer: React.FC = () => {
   );
 };
 
-export default Footer;
+export default FeedFooter;

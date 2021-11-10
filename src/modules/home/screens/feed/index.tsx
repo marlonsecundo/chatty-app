@@ -1,15 +1,21 @@
 import { PostProvider } from "@/src/contexts/post-context";
 import { Column } from "@/src/ui-components/layout/column";
 import React from "react";
-import Footer from "./components/footer";
-import Header from "./components/header";
+import Footer from "./components/feed-footer";
+import Header from "../components/header-bar";
 import PostsFeedList from "./components/posts-feed-list";
+import HeaderBar from "../components/header-bar";
+import BackHeaderButton from "../components/back-header-button";
+import ProfileButton from "./components/profile-button";
 
 const FeedScreen: React.FC = () => {
   return (
     <PostProvider>
       <Column height="100%" alignItems="flex-start">
-        <Header></Header>
+        <HeaderBar
+          leftContent={<BackHeaderButton></BackHeaderButton>}
+          rightContent={<ProfileButton></ProfileButton>}
+        ></HeaderBar>
         <PostsFeedList></PostsFeedList>
         <Footer></Footer>
       </Column>

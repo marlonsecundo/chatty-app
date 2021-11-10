@@ -58,6 +58,8 @@ export const AuthProvider: React.FC = ({ children }) => {
       if (!loggedUser)
         throw NullException({ message: "signUserWithGoogle - User Null" });
 
+      console.log({ loggedUser });
+
       setToken(data.value);
       setUser(loggedUser);
 
@@ -71,7 +73,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ signed, signUserWithGoogle, checkIsLoggedIn, token }}
+      value={{ signed, signUserWithGoogle, checkIsLoggedIn, token, user }}
     >
       {children}
     </AuthContext.Provider>

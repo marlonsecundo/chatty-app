@@ -4,11 +4,12 @@ import IconButton from "@/src/ui-components/icon-button";
 import { Column } from "@/src/ui-components/layout/column";
 import { LayoutContainer } from "@/src/ui-components/layout/layout-container";
 import { Row } from "@/src/ui-components/layout/row";
+import LazyImage from "@/src/ui-components/lazy-image";
 import { Body } from "@/src/ui-components/text/body";
 import { rfValuePX } from "@/src/utils/responsive-fontsize";
 import React from "react";
 import { PostCardProps } from "../..";
-import AvatarImage from "../avatar-image";
+import { AvatarImageWrapper } from "./styles";
 
 const PostCardHeader: React.FC<PostCardProps> = ({ post }) => {
   const renderProfileName = (
@@ -26,7 +27,9 @@ const PostCardHeader: React.FC<PostCardProps> = ({ post }) => {
   return (
     <Row alignItems="flex-start">
       <Column width="auto">
-        <AvatarImage></AvatarImage>
+        <AvatarImageWrapper>
+          <LazyImage imageUrl={post.user?.profile?.imageUrl ?? ""}></LazyImage>
+        </AvatarImageWrapper>
       </Column>
 
       <LayoutContainer marginLeft={rfValuePX(15)} />

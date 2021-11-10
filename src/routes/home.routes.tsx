@@ -1,9 +1,23 @@
 import React from "react";
 
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import {
+  createNativeStackNavigator,
+  NativeStackNavigationProp,
+} from "@react-navigation/native-stack";
 import FeedScreen from "../modules/home/screens/feed";
+import ProfileScreen from "../modules/home/screens/profile";
 
-const Stack = createNativeStackNavigator();
+export type HomeStackParamList = {
+  Feed: undefined;
+  Profile: undefined;
+};
+
+const Stack = createNativeStackNavigator<HomeStackParamList>();
+
+export type FeedScreenProps = NativeStackNavigationProp<
+  HomeStackParamList,
+  "Feed"
+>;
 
 function HomeStackRoutes() {
   return (
@@ -11,6 +25,11 @@ function HomeStackRoutes() {
       <Stack.Screen
         name="Feed"
         component={FeedScreen}
+        options={{ header: () => null }}
+      />
+      <Stack.Screen
+        name="Profile"
+        component={ProfileScreen}
         options={{ header: () => null }}
       />
     </Stack.Navigator>

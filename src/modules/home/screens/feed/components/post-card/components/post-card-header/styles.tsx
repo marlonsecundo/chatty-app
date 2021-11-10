@@ -1,4 +1,3 @@
-import LazyImage from "@/src/ui-components/lazy-image";
 import { rfValuePX } from "@/src/utils/responsive-fontsize";
 import styled from "styled-components/native";
 
