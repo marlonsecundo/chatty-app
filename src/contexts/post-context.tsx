@@ -9,10 +9,8 @@ import { createContext } from "react";
 import { ContextHookException, Exception, NullException } from "../exceptions";
 import { PaginationResult } from "../models/pagination-result";
 import { Post } from "../models/post";
-import {
-  createPost,
+import postService, {
   FetchPostProps,
-  fetchPosts,
   StorePostProps,
 } from "../services/post.service";
 
@@ -32,7 +30,7 @@ export const PostProvider: React.FC = ({ children }) => {
   const loadPosts = useCallback(
     async (args: FetchPostProps, clearBefore: boolean) => {
       try {
-        const result = await fetchPosts(args);
+        const result = await postService.fetchPosts(args);
 
         setPostPagResult(result ?? undefined);
 
@@ -59,7 +57,7 @@ export const PostProvider: React.FC = ({ children }) => {
 
   const storePost = useCallback(async (args: StorePostProps): Promise<Post> => {
     try {
-      const post = await createPost(args);
+      const post = await postService.createPost(args);
 
       if (!post) throw NullException({ message: "Post Null" });
 

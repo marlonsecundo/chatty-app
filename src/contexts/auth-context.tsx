@@ -10,13 +10,17 @@ import {
   getAsyncStorageData,
   storeAsyncStorageData,
 } from "../services/async-storage.service";
-import { getUser, getUserTokenWithGoogle } from "../services/auth.service";
+import authService, { UpdateUserProps } from "../services/auth.service";
 interface AuthContextProps {
   token?: string;
   user?: User;
   signed: boolean;
   signUserWithGoogle: () => Promise<void>;
   checkIsLoggedIn: () => Promise<boolean>;
+  updateUser: (
+    token: string,
+    data: UpdateUserProps
+  ) => Promise<UpdateUserProps>;
 }
 
 const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
@@ -27,12 +31,12 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   const signUserWithGoogle = useCallback(async () => {
     try {
-      const userToken = await getUserTokenWithGoogle();
+      const userToken = await authService.getUserTokenWithGoogle();
 
       if (!userToken)
         throw NullException({ message: "signUserWithGoogle - Token Null" });
 
-      const loggedUser = await getUser(userToken);
+      const loggedUser = await authService.getUser(userToken);
 
       if (!loggedUser)
         throw NullException({ message: "signUserWithGoogle - User Null" });
@@ -53,12 +57,10 @@ export const AuthProvider: React.FC = ({ children }) => {
       if (!data?.value)
         throw NullException({ message: "signInWithToken - Token Null" });
 
-      const loggedUser = await getUser(data.value);
+      const loggedUser = await authService.getUser(data.value);
 
       if (!loggedUser)
         throw NullException({ message: "signUserWithGoogle - User Null" });
-
-      console.log({ loggedUser });
 
       setToken(data.value);
       setUser(loggedUser);
@@ -69,11 +71,40 @@ export const AuthProvider: React.FC = ({ children }) => {
     }
   }, []);
 
+  const updateUser = useCallback(
+    async (token: string, data: UpdateUserProps): Promise<UpdateUserProps> => {
+      try {
+        const updatedData = await authService.updateUser(token, data);
+
+        if (!updatedData)
+          throw NullException({ message: "updateUser - updatedData Null" });
+
+        setUser({
+          ...user,
+          username: updatedData.username,
+          profile: { ...user?.profile, ...updatedData.profile },
+        });
+
+        return updatedData;
+      } catch (error) {
+        throw error;
+      }
+    },
+    [user]
+  );
+
   const signed = !!user;
 
   return (
     <AuthContext.Provider
-      value={{ signed, signUserWithGoogle, checkIsLoggedIn, token, user }}
+      value={{
+        signed,
+        signUserWithGoogle,
+        checkIsLoggedIn,
+        updateUser,
+        token,
+        user,
+      }}
     >
       {children}
     </AuthContext.Provider>

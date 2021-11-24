@@ -11,25 +11,25 @@ export interface Exception {
 export function NullException(args: Exception): Exception {
   const name = "NullException";
 
-  return { ...args, name };
+  return { ...args, name, itype: "EXCEPTION" };
 }
 
 export function AxiosRequestException(args: Exception): Exception {
   const name = "AxiosRequestException";
 
-  return { ...args, name };
+  return { ...args, name, itype: "EXCEPTION" };
 }
 
 export function AsyncStorageException(args: Exception): Exception {
   const name = "AsyncStorageException";
 
-  return { ...args, name };
+  return { ...args, name, itype: "EXCEPTION" };
 }
 
 export function UnknowException(args: Exception): Exception {
   const name = "UnknowException";
 
-  return { ...args, name };
+  return { ...args, name, itype: "EXCEPTION" };
 }
 
 export function ContextHookException({
@@ -39,5 +39,9 @@ export function ContextHookException({
 }): Exception {
   const name = "ContextException";
 
-  return { name, message: hookName + "must be used within a Provider" };
+  return {
+    name,
+    message: hookName + "must be used within a Provider",
+    itype: "EXCEPTION",
+  };
 }

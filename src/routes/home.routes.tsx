@@ -6,6 +6,8 @@ import {
 } from "@react-navigation/native-stack";
 import FeedScreen from "../modules/home/screens/feed";
 import ProfileScreen from "../modules/home/screens/profile";
+import { View } from "react-native";
+import styled from "styled-components/native";
 
 export type HomeStackParamList = {
   Feed: undefined;
@@ -19,20 +21,27 @@ export type FeedScreenProps = NativeStackNavigationProp<
   "Feed"
 >;
 
+const BackgroundRootView = styled.View`
+  background-color: ${({ theme }) => theme.colors.background};
+  flex: 1;
+`;
+
 function HomeStackRoutes() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Feed"
-        component={FeedScreen}
-        options={{ header: () => null }}
-      />
-      <Stack.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{ header: () => null }}
-      />
-    </Stack.Navigator>
+    <BackgroundRootView>
+      <Stack.Navigator defaultScreenOptions={{}}>
+        <Stack.Screen
+          name="Feed"
+          component={FeedScreen}
+          options={{ header: () => null }}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{ header: () => null }}
+        />
+      </Stack.Navigator>
+    </BackgroundRootView>
   );
 }
 

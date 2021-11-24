@@ -14,17 +14,24 @@ import { HeaderWrapper } from "./styles";
 interface HeaderProps {
   leftContent?: React.ReactNode;
   rightContent?: React.ReactNode;
+  title: string;
+  transparent?: boolean;
 }
 
-const HeaderBar: React.FC<HeaderProps> = ({ rightContent, leftContent }) => {
+const HeaderBar: React.FC<HeaderProps> = ({
+  rightContent,
+  leftContent,
+  title,
+  transparent = false,
+}) => {
   return (
-    <HeaderWrapper>
+    <HeaderWrapper transparent={transparent}>
       <SafeAreaView>
         <Column>
           <Row width="100%" justifyContent="space-between" alignItems="center">
             {leftContent}
 
-            <Headline size="24">Feed</Headline>
+            <Headline size="24">{title}</Headline>
 
             {rightContent}
           </Row>

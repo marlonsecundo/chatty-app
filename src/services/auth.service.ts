@@ -5,71 +5,102 @@ import { AxiosRequestException, NullException } from "../exceptions";
 import Constants from "expo-constants";
 import axios, { AxiosError } from "axios";
 import getAxiosError from "../utils/get-axios-error";
+import { getAuthorizationHeader } from "../utils/get-authorization-header";
 
-export async function getUserTokenWithGoogle(): Promise<string | null> {
-  let userToken: string | null = null;
+export interface UpdateUserProps {
+  username: string;
+  profile: {
+    name: string;
+    description: string;
+    birth: string;
+  };
+}
 
-  function handleTokenInUrl({ url }: { url: string }) {
-    if (url.includes("token")) {
-      const [_, tokenUrl] = url.split("?token=");
+class AuthService {
+  async getUserTokenWithGoogle(): Promise<string | null> {
+    let userToken: string | null = null;
 
-      const [token] = tokenUrl.split("&");
+    function handleTokenInUrl({ url }: { url: string }) {
+      if (url.includes("token")) {
+        const [_, tokenUrl] = url.split("?token=");
 
-      userToken = token;
+        const [token] = tokenUrl.split("&");
+
+        userToken = token;
+      }
+    }
+
+    // Wait to the Linking.addEventListener get the token
+    async function holdForUrl() {
+      await new Promise<string | null>((resolve, reject) => {
+        let intervalCount = 0;
+        const refreshIntervalId = setInterval(() => {
+          intervalCount += 1;
+
+          if (userToken || intervalCount > 3) {
+            clearInterval(refreshIntervalId);
+            resolve(userToken);
+          }
+        }, 300);
+      });
+    }
+
+    try {
+      WebBrowser.maybeCompleteAuthSession();
+
+      Linking.addEventListener("url", handleTokenInUrl);
+
+      await WebBrowser.openAuthSessionAsync(
+        `${api.defaults.baseURL!}/google/redirect?appRedirectUri=${
+          Constants.linkingUri
+        }`,
+        Constants.linkingUri
+      );
+
+      await holdForUrl();
+
+      Linking.removeEventListener("url", handleTokenInUrl);
+
+      return userToken;
+    } catch (err) {
+      console.log("ERROR - auth.service - getUserTokenWithGoogle");
+
+      throw getAxiosError(err);
     }
   }
 
-  // Wait to the Linking.addEventListener get the token
-  async function holdForUrl() {
-    await new Promise<string | null>((resolve, reject) => {
-      let intervalCount = 0;
-      const refreshIntervalId = setInterval(() => {
-        intervalCount += 1;
+  async getUser(token: string): Promise<User | null> {
+    try {
+      const response = await api.get<User>("/google/user", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
 
-        if (userToken || intervalCount > 3) {
-          clearInterval(refreshIntervalId);
-          resolve(userToken);
-        }
-      }, 300);
-    });
+      return response.data;
+    } catch (err: AxiosError | unknown) {
+      console.log("ERROR - auth.service - getUser");
+
+      throw getAxiosError(err);
+    }
   }
 
-  try {
-    WebBrowser.maybeCompleteAuthSession();
+  async updateUser(
+    token: string,
+    data: UpdateUserProps
+  ): Promise<UpdateUserProps | null> {
+    try {
+      const response = await api.patch<UpdateUserProps>("/users/me", data, {
+        headers: getAuthorizationHeader(token),
+      });
 
-    Linking.addEventListener("url", handleTokenInUrl);
+      return response.data;
+    } catch (err: AxiosError | unknown) {
+      console.log("ERROR - auth.service - updateUser");
 
-    await WebBrowser.openAuthSessionAsync(
-      `${api.defaults.baseURL!}/google/redirect?appRedirectUri=${
-        Constants.linkingUri
-      }`,
-      Constants.linkingUri
-    );
-
-    await holdForUrl();
-
-    Linking.removeEventListener("url", handleTokenInUrl);
-
-    return userToken;
-  } catch (err) {
-    console.log("ERROR - getUserTokenWithGoogle");
-
-    throw getAxiosError(err);
+      throw getAxiosError(err);
+    }
   }
 }
 
-export async function getUser(token: string): Promise<User | null> {
-  try {
-    const response = await api.get<User>("/google/user", {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    });
-
-    return response.data;
-  } catch (err: AxiosError | unknown) {
-    console.log("ERROR - getUser");
-
-    throw getAxiosError(err);
-  }
-}
+export default new AuthService();

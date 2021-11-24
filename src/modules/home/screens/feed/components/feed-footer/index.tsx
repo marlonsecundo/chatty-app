@@ -1,16 +1,13 @@
 import { useAuth } from "@/src/contexts/auth-context";
 import { usePost } from "@/src/contexts/post-context";
-import { StorePostProps } from "@/src/services/post.service";
 import { FeatherIcon } from "@/src/ui-components/icon";
 import IconButton from "@/src/ui-components/icon-button";
 import { Column } from "@/src/ui-components/layout/column";
 import { LayoutContainer } from "@/src/ui-components/layout/layout-container";
-import { Body } from "@/src/ui-components/text/body";
-import { Caption } from "@/src/ui-components/text/caption";
 import { getExceptionFromError } from "@/src/utils/get-exception-from-error";
 import { rfValue, rfValuePX } from "@/src/utils/responsive-fontsize";
 import { StorePostSchema } from "@/src/validators/post.validator";
-import { Formik, FormikBag, FormikHelpers } from "formik";
+import { Formik, FormikHelpers } from "formik";
 import { MotiView } from "moti";
 import React, { useCallback, useState } from "react";
 import Toast from "react-native-root-toast";

@@ -14,6 +14,7 @@ const FeedScreen: React.FC = () => {
       <Column height="100%" alignItems="flex-start">
         <HeaderBar
           leftContent={<BackHeaderButton></BackHeaderButton>}
+          title="Feed"
           rightContent={<ProfileButton></ProfileButton>}
         ></HeaderBar>
         <PostsFeedList></PostsFeedList>

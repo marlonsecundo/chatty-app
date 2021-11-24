@@ -18,40 +18,41 @@ export interface StorePostProps {
   token: string;
 }
 
-export async function fetchPosts({
-  token,
-  page,
-  limit,
-}: FetchPostProps): AxiosPaginationResult<Post> {
-  try {
-    const response = await api.get<PaginationResult<Post>>("/posts", {
-      params: {
-        page,
-        limit,
-      },
-      headers: getAuthorizationHeader(token),
-    });
+class PostService {
+  async fetchPosts({
+    token,
+    page,
+    limit,
+  }: FetchPostProps): AxiosPaginationResult<Post> {
+    try {
+      const response = await api.get<PaginationResult<Post>>("/posts", {
+        params: {
+          page,
+          limit,
+        },
+        headers: getAuthorizationHeader(token),
+      });
 
-    return response.data;
-  } catch (error) {
-    console.log("ERROR - fetchPosts");
-    throw getAxiosError(error);
+      return response.data;
+    } catch (error) {
+      console.log("ERROR - fetchPosts");
+      throw getAxiosError(error);
+    }
+  }
+
+  async createPost({ content, token }: StorePostProps): AxiosPostResult<Post> {
+    try {
+      const data = { content };
+      const response = await api.post("/posts", data, {
+        headers: getAuthorizationHeader(token),
+      });
+
+      return response.data as Post;
+    } catch (error) {
+      console.log("ERROR - post.service - createPost");
+      throw getAxiosError(error);
+    }
   }
 }
 
-export async function createPost({
-  content,
-  token,
-}: StorePostProps): AxiosPostResult<Post> {
-  try {
-    const data = { content };
-    const response = await api.post("/posts", data, {
-      headers: getAuthorizationHeader(token),
-    });
-
-    return response.data as Post;
-  } catch (error) {
-    console.log("ERROR - create");
-    throw getAxiosError(error);
-  }
-}
+export default new PostService();
