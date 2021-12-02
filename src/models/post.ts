@@ -1,8 +1,11 @@
+import { PostLike } from "./post-like";
+
 export interface Post {
   id: string;
   content?: string;
-  passedTime?: string;
+  timeSince?: string;
   commentsCount?: number;
   likesCount?: number;
   user?: User;
+  likes?: PostLike[];
 }

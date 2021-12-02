@@ -1,6 +1,6 @@
+import { AxiosResponse } from "axios";
 import {
   AxiosPaginationResult,
-  AxiosPostResult,
   FetchPaginationProps,
   PaginationResult,
 } from "../models/pagination-result";
@@ -15,6 +15,11 @@ export interface FetchPostProps extends FetchPaginationProps {
 
 export interface StorePostProps {
   content: string;
+  token: string;
+}
+
+export interface LikePostProps {
+  post: Post;
   token: string;
 }
 
@@ -40,7 +45,7 @@ class PostService {
     }
   }
 
-  async createPost({ content, token }: StorePostProps): AxiosPostResult<Post> {
+  async createPost({ content, token }: StorePostProps): Promise<Post | null> {
     try {
       const data = { content };
       const response = await api.post("/posts", data, {
@@ -50,6 +55,42 @@ class PostService {
       return response.data as Post;
     } catch (error) {
       console.log("ERROR - post.service - createPost");
+      throw getAxiosError(error);
+    }
+  }
+
+  async likePost({
+    post,
+    token,
+  }: LikePostProps): Promise<AxiosResponse | null> {
+    try {
+      const route = `/posts/${post.id}/likes`;
+
+      const response = await api.post(route, null, {
+        headers: getAuthorizationHeader(token),
+      });
+
+      return response;
+    } catch (error) {
+      console.log("ERROR - post.service - likePost");
+      throw getAxiosError(error);
+    }
+  }
+
+  async removePostLike({
+    post,
+    token,
+  }: LikePostProps): Promise<AxiosResponse | null> {
+    try {
+      const route = `/posts/${post.id}/likes/my`;
+
+      const response = await api.delete(route, {
+        headers: getAuthorizationHeader(token),
+      });
+
+      return response;
+    } catch (error) {
+      console.log("ERROR - post.service - removePostLike");
       throw getAxiosError(error);
     }
   }
