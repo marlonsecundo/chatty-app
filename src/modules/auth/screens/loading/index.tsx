@@ -1,9 +1,9 @@
 import { Center } from "@/src/ui-components/layout/center";
 import { LayoutContainer } from "@/src/ui-components/layout/layout-container";
+import { Spinner } from "@/src/ui-components/spinner";
 import { Headline } from "@/src/ui-components/text/headline";
 import { rfValuePX } from "@/src/utils/responsive-fontsize";
 import React from "react";
-import { Spinner } from "./styles";
 
 const LoadingScreen: React.FC = () => {
   return (

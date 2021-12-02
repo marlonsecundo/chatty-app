@@ -1,16 +1,19 @@
 import AuthContext from "@/src/contexts/auth-context";
 import PostContext, { usePost } from "@/src/contexts/post-context";
-import React, { useCallback, useContext, useEffect } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { FeedWrapper, StyledFlatList } from "./styles";
 import Toast from "react-native-root-toast";
 import { getExceptionFromError } from "@/src/utils/get-exception-from-error";
-import PostCard from "../post-card";
+import PostCard from "./components/post-card";
 import { Post } from "@/src/models/post";
-import LoadingPosts from "../loading-posts";
+import LoadingPosts from "./components/loading-posts";
+import ListEnd from "./components/list-end";
 
 const PostsFeedList: React.FC = () => {
   const { token } = useContext(AuthContext);
   const { posts, loadPosts, postPagResult } = usePost();
+
+  const [reachedTheEnd, setReachedTheEnd] = useState(false);
 
   const handleLoadPosts = useCallback(
     async (page: number, clearBefore: boolean = false) => {
@@ -29,8 +32,10 @@ const PostsFeedList: React.FC = () => {
   );
 
   const handleOnReachEnd = useCallback(() => {
-    if (postPagResult?.meta.currentPage === postPagResult?.meta.lastPage)
+    if (postPagResult?.meta.currentPage === postPagResult?.meta.lastPage) {
+      setReachedTheEnd(true);
       return;
+    }
 
     if (!postPagResult?.meta.currentPage) return;
 
@@ -45,6 +50,12 @@ const PostsFeedList: React.FC = () => {
     handleLoadPosts(1, true);
   }, []);
 
+  const listFooterComp = reachedTheEnd ? (
+    <ListEnd></ListEnd>
+  ) : (
+    <LoadingPosts></LoadingPosts>
+  );
+
   return (
     <FeedWrapper>
       <StyledFlatList
@@ -52,7 +63,7 @@ const PostsFeedList: React.FC = () => {
         renderItem={renderItem}
         onEndReached={handleOnReachEnd}
         onEndReachedThreshold={0.05}
-        ListFooterComponent={<LoadingPosts></LoadingPosts>}
+        ListFooterComponent={listFooterComp}
       />
     </FeedWrapper>
   );

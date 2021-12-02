@@ -1,4 +1,5 @@
 import { Column } from "@/src/ui-components/layout/column";
+import { Spinner } from "@/src/ui-components/spinner";
 import { Headline } from "@/src/ui-components/text/headline";
 import { rfValuePX } from "@/src/utils/responsive-fontsize";
 import React from "react";
@@ -11,7 +12,7 @@ const LoadingPosts: React.FC = () => {
       spadding={rfValuePX(30)}
       marginBottom={rfValuePX(50)}
     >
-      <Headline>🔎</Headline>
+      <Spinner></Spinner>
       <Headline size="24">loading new posts</Headline>
     </Column>
   );
