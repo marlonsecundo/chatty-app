@@ -65,6 +65,20 @@ const FeedFooter: React.FC = () => {
     );
   };
 
+  const renderAnimatedCloseButton = ({ onPress }: { onPress: () => void }) => {
+    const opacity = inputVisible ? rfValue(1) : 0;
+
+    return (
+      <MotiView animate={{ opacity }}>
+        <IconButton
+          withBackgroundColor={false}
+          onPress={onPress}
+          icon={<FeatherIcon name="x"></FeatherIcon>}
+        ></IconButton>
+      </MotiView>
+    );
+  };
+
   return (
     <FooterWrapper>
       <Formik<StorePostFormValueProps>
@@ -92,17 +106,15 @@ const FeedFooter: React.FC = () => {
                 ></IconButton>
 
                 <LayoutContainer sright="0px" position="absolute">
-                  <IconButton
-                    withBackgroundColor={false}
-                    onPress={() => {
+                  {renderAnimatedCloseButton({
+                    onPress: () => {
                       if (inputVisible) {
                         setErrors({ content: "" });
                         setInputVisible(false);
                         return;
                       }
-                    }}
-                    icon={<FeatherIcon name="x"></FeatherIcon>}
-                  ></IconButton>
+                    },
+                  })}
                 </LayoutContainer>
               </ActionsWrapper>
 

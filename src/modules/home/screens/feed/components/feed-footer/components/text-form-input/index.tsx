@@ -1,6 +1,7 @@
 import { FeatherIcon } from "@/src/ui-components/icon";
 import IconButton from "@/src/ui-components/icon-button";
 import { Column } from "@/src/ui-components/layout/column";
+import { Row } from "@/src/ui-components/layout/row";
 import { LayoutContainer } from "@/src/ui-components/layout/layout-container";
 import { Body } from "@/src/ui-components/text/body";
 import { Caption } from "@/src/ui-components/text/caption";
@@ -17,10 +18,10 @@ const TextFormInput: React.FC = () => {
     useFormikContext<StorePostFormValueProps>();
 
   const renderAnimatedError = () => {
-    const height = errors.content ? rfValue(25) : 0;
+    const translateY = errors.content ? 0 : rfValue(30);
 
     return (
-      <MotiView animate={{ height }}>
+      <MotiView animate={{ translateY }}>
         <LayoutContainer position="absolute">
           <Body>{errors.content}</Body>
         </LayoutContainer>
@@ -30,7 +31,11 @@ const TextFormInput: React.FC = () => {
 
   return (
     <Column sflex={1}>
-      {renderAnimatedError()}
+      <Row justifyContent="space-between" marginBottom={rfValuePX(7)}>
+        {renderAnimatedError()}
+        <Caption>{values.content?.length.toString() ?? "0"}/205</Caption>
+      </Row>
+
       <TextInputWrapper alignItems="center" justifyContent="space-between">
         <StyledTextInput
           onChangeText={handleChange("content")}
@@ -39,18 +44,6 @@ const TextFormInput: React.FC = () => {
           value={values.content}
           maxLength={205}
         ></StyledTextInput>
-
-        <Column alignItems="center">
-          <IconButton
-            onPress={() => {
-              setErrors({ content: undefined });
-              setFieldValue("content", "");
-            }}
-            withBackgroundColor={false}
-            icon={<FeatherIcon name="x-circle"></FeatherIcon>}
-          ></IconButton>
-          <Caption>{values.content?.length.toString() ?? "0"}/205</Caption>
-        </Column>
       </TextInputWrapper>
     </Column>
   );
