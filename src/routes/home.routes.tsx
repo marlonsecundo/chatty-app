@@ -5,13 +5,15 @@ import {
   NativeStackNavigationProp,
 } from "@react-navigation/native-stack";
 import FeedScreen from "../modules/home/screens/feed";
-import ProfileScreen from "../modules/home/screens/profile";
+import ProfileScreen, {
+  ProfileScreenProps,
+} from "../modules/home/screens/profile";
 import { View } from "react-native";
 import styled from "styled-components/native";
 
 export type HomeStackParamList = {
   Feed: undefined;
-  Profile: undefined;
+  Profile: ProfileScreenProps;
 };
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();
@@ -20,6 +22,8 @@ export type FeedScreenProps = NativeStackNavigationProp<
   HomeStackParamList,
   "Feed"
 >;
+
+export type DefaultScreenProps = NativeStackNavigationProp<HomeStackParamList>;
 
 const BackgroundRootView = styled.View`
   background-color: ${({ theme }) => theme.colors.background};

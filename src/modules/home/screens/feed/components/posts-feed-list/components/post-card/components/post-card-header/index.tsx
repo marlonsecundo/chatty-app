@@ -1,4 +1,7 @@
+import { useAuth } from "@/src/contexts/auth-context";
 import { Post } from "@/src/models/post";
+import { DefaultScreenProps, FeedScreenProps } from "@/src/routes/home.routes";
+import userService from "@/src/services/user.service";
 import { FeatherIcon } from "@/src/ui-components/icon";
 import IconButton from "@/src/ui-components/icon-button";
 import { Column } from "@/src/ui-components/layout/column";
@@ -6,12 +9,17 @@ import { LayoutContainer } from "@/src/ui-components/layout/layout-container";
 import { Row } from "@/src/ui-components/layout/row";
 import LazyImage from "@/src/ui-components/lazy-image";
 import { Body } from "@/src/ui-components/text/body";
+import { getExceptionFromError } from "@/src/utils/get-exception-from-error";
 import { rfValuePX } from "@/src/utils/responsive-fontsize";
-import React from "react";
+import { useNavigation } from "@react-navigation/core";
+import React, { useCallback } from "react";
 import { PostCardProps } from "../..";
-import { AvatarImageWrapper } from "./styles";
+import { AvatarButton, AvatarButtonWrapper, AvatarImage } from "./styles";
 
 const PostCardHeader: React.FC<PostCardProps> = ({ post }) => {
+  const { token } = useAuth();
+  const navigation = useNavigation<DefaultScreenProps>();
+
   const renderProfileName = (
     <Body fontFamily="Roboto_700Bold" opacity={0.9}>
       {post.user?.profile?.name ?? "-"}
@@ -24,13 +32,27 @@ const PostCardHeader: React.FC<PostCardProps> = ({ post }) => {
     </Body>
   );
 
+  const handleAvatarButton = useCallback(async () => {
+    try {
+      const user = await userService.showUser({
+        token,
+        userId: post.user?.id,
+      });
+
+      navigation.navigate("Profile", { user });
+    } catch (error) {
+      const exeption = getExceptionFromError(error);
+    }
+  }, [token]);
+
   return (
     <Row alignItems="flex-start">
-      <Column width="auto">
-        <AvatarImageWrapper>
-          <LazyImage imageUrl={post.user?.profile?.imageUrl ?? ""}></LazyImage>
-        </AvatarImageWrapper>
-      </Column>
+      <AvatarButtonWrapper>
+        <AvatarButton onPress={handleAvatarButton}></AvatarButton>
+        <AvatarImage
+          imageUrl={post.user?.profile?.imageUrl ?? ""}
+        ></AvatarImage>
+      </AvatarButtonWrapper>
 
       <LayoutContainer marginLeft={rfValuePX(15)} />
 

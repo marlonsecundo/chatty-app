@@ -13,7 +13,6 @@ import {
   BaseButton,
   BorderlessButton,
   RectButton,
-  ScrollView,
 } from "react-native-gesture-handler";
 import styled from "styled-components/native";
 
@@ -45,7 +44,7 @@ export const SubmitButton = styled(BorderlessButton)`
 
 export const ProfileWrapper = styled(LayoutContainer)``;
 
-export const ScrollViewWrapper = styled(ScrollView)``;
+export const ScrollViewWrapper = styled.ScrollView``;
 
 export const Loading = styled(ActivityIndicator).attrs(({ theme }) => ({
   color: theme.colors.text,

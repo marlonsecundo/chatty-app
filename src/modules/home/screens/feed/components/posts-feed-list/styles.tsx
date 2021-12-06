@@ -1,5 +1,6 @@
+import { Post } from "@/src/models/post";
 import { rfValuePX } from "@/src/utils/responsive-fontsize";
-import { FlatList } from "react-native-gesture-handler";
+import { FlatList } from "react-native";
 import styled from "styled-components/native";
 
 export const FeedWrapper = styled.View`
@@ -11,6 +12,6 @@ export const FeedWrapper = styled.View`
   flex: 1;
 `;
 
-export const StyledFlatList = styled(FlatList)`
+export const StyledFlatList = styled.FlatList<Post>`
   flex: 1;
 `;

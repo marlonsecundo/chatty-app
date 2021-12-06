@@ -1,6 +1,8 @@
 interface User {
-  id?: number;
+  id?: string;
   email?: string;
   profile?: Profile;
   username?: string;
+  postLikesCount?: number;
+  postsCount?: number;
 }

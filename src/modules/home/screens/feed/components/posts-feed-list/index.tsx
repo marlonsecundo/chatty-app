@@ -8,24 +8,24 @@ import PostCard from "./components/post-card";
 import { Post } from "@/src/models/post";
 import LoadingPosts from "./components/loading-posts";
 import ListEnd from "./components/list-end";
+import { ListRenderItem, RefreshControl } from "react-native";
+import { View } from "@motify/components";
 
 const PostsFeedList: React.FC = () => {
   const { token } = useContext(AuthContext);
-  const { posts, loadPosts, postPagResult } = usePost();
+  const { posts, fetchPosts, postPagResult } = usePost();
 
   const [reachedTheEnd, setReachedTheEnd] = useState(false);
+  const [refreshing, setRefreshing] = React.useState(false);
 
-  const handleLoadPosts = useCallback(
-    async (page: number, clearBefore: boolean = false) => {
+  const handleFetchPosts = useCallback(
+    async (page: number, replace: boolean = false) => {
       try {
-        await loadPosts({ token: token ?? "", page, limit: 10 }, clearBefore);
+        await fetchPosts({ token: token ?? "", page, limit: 10 }, replace);
       } catch (err) {
         const exception = getExceptionFromError(err);
 
-        Toast.show(exception.message, {
-          duration: Toast.durations.LONG,
-          position: Toast.positions.CENTER,
-        });
+        Toast.show(exception.message);
       }
     },
     [token]
@@ -39,15 +39,23 @@ const PostsFeedList: React.FC = () => {
 
     if (!postPagResult?.meta.currentPage) return;
 
-    handleLoadPosts(postPagResult?.meta.currentPage + 1);
+    handleFetchPosts(postPagResult?.meta.currentPage + 1);
   }, [postPagResult]);
 
-  const renderItem = useCallback(({ item }: { item: Post }) => {
+  const renderItem: ListRenderItem<Post> = useCallback(({ item }) => {
     return <PostCard key={item.id} post={item}></PostCard>;
   }, []);
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+
+    await handleFetchPosts(1, true);
+
+    setRefreshing(false);
+  }, []);
+
   useEffect(() => {
-    handleLoadPosts(1, true);
+    handleFetchPosts(1, true);
   }, []);
 
   const listFooterComp = reachedTheEnd ? (
@@ -58,12 +66,15 @@ const PostsFeedList: React.FC = () => {
 
   return (
     <FeedWrapper>
-      <StyledFlatList
+      <StyledFlatList<React.ElementType>
         data={posts ?? []}
         renderItem={renderItem}
         onEndReached={handleOnReachEnd}
         onEndReachedThreshold={0.05}
         ListFooterComponent={listFooterComp}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
     </FeedWrapper>
   );

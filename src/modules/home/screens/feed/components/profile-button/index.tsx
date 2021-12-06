@@ -9,7 +9,7 @@ const ProfileButton: React.FC = () => {
   const { user } = useAuth();
 
   const onProfilePress = useCallback(() => {
-    navigation.navigate("Profile");
+    navigation.navigate("Profile", { user: user });
   }, []);
 
   return (

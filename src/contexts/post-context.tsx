@@ -16,7 +16,7 @@ import postService, {
 
 interface PostContextProps {
   posts: Post[];
-  loadPosts: (args: FetchPostProps, clearBefore: boolean) => Promise<void>;
+  fetchPosts: (args: FetchPostProps, replace: boolean) => Promise<void>;
   storePost: (args: StorePostProps) => Promise<Post>;
   postPagResult?: PaginationResult<Post>;
 }
@@ -27,8 +27,8 @@ export const PostProvider: React.FC = ({ children }) => {
   const [postPagResult, setPostPagResult] = useState<PaginationResult<Post>>();
   const [posts, setPosts] = useState<Post[]>([]);
 
-  const loadPosts = useCallback(
-    async (args: FetchPostProps, clearBefore: boolean) => {
+  const fetchPosts = useCallback(
+    async (args: FetchPostProps, replace: boolean) => {
       try {
         const result = await postService.fetchPosts(args);
 
@@ -36,7 +36,7 @@ export const PostProvider: React.FC = ({ children }) => {
 
         const resultData = result?.data ?? [];
 
-        if (clearBefore) {
+        if (replace) {
           setPosts(resultData);
         } else {
           setPosts((prevPosts) => {
@@ -71,7 +71,7 @@ export const PostProvider: React.FC = ({ children }) => {
 
   return (
     <PostContext.Provider
-      value={{ loadPosts, posts, postPagResult, storePost }}
+      value={{ fetchPosts, posts, postPagResult, storePost }}
     >
       {children}
     </PostContext.Provider>

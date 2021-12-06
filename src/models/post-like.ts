@@ -1,3 +1,3 @@
 export interface PostLike {
-  userId?: number;
+  userId?: string;
 }
