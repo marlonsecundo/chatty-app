@@ -1,3 +1,4 @@
+import { AxiosResponse } from "axios";
 import React, {
   createContext,
   useCallback,
@@ -5,12 +6,14 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import { STATUS_OK } from "../core/contants/axios-response-status";
 import { ContextHookException, NullException } from "../exceptions";
-import {
-  getAsyncStorageData,
-  storeAsyncStorageData,
-} from "../services/async-storage.service";
-import authService, { UpdateUserProps } from "../services/auth.service";
+import asyncStorageService from "../services/async-storage.service";
+
+import authService, {
+  LogoutUserProps,
+  UpdateUserProps,
+} from "../services/auth.service";
 interface AuthContextProps {
   token?: string;
   user?: User;
@@ -21,6 +24,7 @@ interface AuthContextProps {
     token: string,
     data: UpdateUserProps
   ) => Promise<UpdateUserProps>;
+  logoutUser: (args: LogoutUserProps) => Promise<AxiosResponse>;
 }
 
 const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
@@ -44,7 +48,10 @@ export const AuthProvider: React.FC = ({ children }) => {
       setToken(userToken);
       setUser(loggedUser);
 
-      await storeAsyncStorageData({ key: "@USER_TOKEN", value: userToken });
+      await asyncStorageService.storeAsyncStorageData({
+        key: "@USER_TOKEN",
+        value: userToken,
+      });
     } catch (error) {
       throw error;
     }
@@ -52,7 +59,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   const checkIsLoggedIn = useCallback(async (): Promise<boolean> => {
     try {
-      const data = await getAsyncStorageData("@USER_TOKEN");
+      const data = await asyncStorageService.getAsyncStorageData("@USER_TOKEN");
 
       if (!data?.value)
         throw NullException({ message: "signInWithToken - Token Null" });
@@ -93,6 +100,25 @@ export const AuthProvider: React.FC = ({ children }) => {
     [user]
   );
 
+  const logoutUser = useCallback(
+    async (args: LogoutUserProps): Promise<AxiosResponse> => {
+      try {
+        const response = await authService.logoutUser(args);
+
+        if (response?.status === STATUS_OK) {
+          setToken(undefined);
+          setUser(undefined);
+          await asyncStorageService.removeAsyncStorageData("@USER_TOKEN");
+        }
+
+        return response;
+      } catch (error) {
+        throw error;
+      }
+    },
+    []
+  );
+
   const signed = !!user;
 
   return (
@@ -102,6 +128,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         signUserWithGoogle,
         checkIsLoggedIn,
         updateUser,
+        logoutUser,
         token,
         user,
       }}

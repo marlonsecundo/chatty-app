@@ -3,7 +3,7 @@ import * as WebBrowser from "expo-web-browser";
 import { Linking } from "react-native";
 import { AxiosRequestException, NullException } from "../exceptions";
 import Constants from "expo-constants";
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import getAxiosError from "../utils/get-axios-error";
 import { getAuthorizationHeader } from "../utils/get-authorization-header";
 
@@ -14,6 +14,10 @@ export interface UpdateUserProps {
     description: string;
     birth: string;
   };
+}
+
+export interface LogoutUserProps {
+  token: string;
 }
 
 class AuthService {
@@ -97,6 +101,20 @@ class AuthService {
       return response.data;
     } catch (err: AxiosError | unknown) {
       console.log("ERROR - auth.service - updateUser");
+
+      throw getAxiosError(err);
+    }
+  }
+
+  async logoutUser({ token }: LogoutUserProps): Promise<AxiosResponse> {
+    try {
+      const response = await api.delete("/logout", {
+        headers: getAuthorizationHeader(token),
+      });
+
+      return response;
+    } catch (err: AxiosError | unknown) {
+      console.log("ERROR - auth.service - logoutUser");
 
       throw getAxiosError(err);
     }

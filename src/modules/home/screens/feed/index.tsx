@@ -7,13 +7,14 @@ import PostsFeedList from "./components/posts-feed-list";
 import HeaderBar from "../components/header-bar";
 import BackHeaderButton from "../components/back-header-button";
 import ProfileButton from "./components/profile-button";
+import LogoutButton from "./components/logout-button";
 
 const FeedScreen: React.FC = () => {
   return (
     <PostProvider>
       <Column height="100%" alignItems="flex-start">
         <HeaderBar
-          leftContent={<BackHeaderButton></BackHeaderButton>}
+          leftContent={<LogoutButton></LogoutButton>}
           title="Feed"
           rightContent={<ProfileButton></ProfileButton>}
         ></HeaderBar>

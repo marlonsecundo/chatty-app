@@ -8,7 +8,7 @@ const ListEnd: React.FC = () => {
   return (
     <Column smargin={rfValuePX(40)} justifyContent="center" alignItems="center">
       <Headline>😯</Headline>
-      <Body>Wow! Seens that you reach the end of the feed!</Body>
+      <Body>Wow! Seens that you reached the end of the feed!</Body>
       <Body>Pull the screen down to refresh the list!</Body>
     </Column>
   );
