@@ -1,4 +1,3 @@
-import api from "./api";
 import * as WebBrowser from "expo-web-browser";
 import { Linking } from "react-native";
 import { AxiosRequestException, NullException } from "../exceptions";
@@ -6,6 +5,8 @@ import Constants from "expo-constants";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import getAxiosError from "../utils/get-axios-error";
 import { getAuthorizationHeader } from "../utils/get-authorization-header";
+import API from "./api";
+import BaseService from "./base-service";
 
 export interface UpdateUserProps {
   username: string;
@@ -20,7 +21,13 @@ export interface LogoutUserProps {
   token: string;
 }
 
-class AuthService {
+export interface CancelAccountProps {
+  token: string;
+}
+
+WebBrowser.maybeCompleteAuthSession();
+
+class AuthService extends BaseService {
   async getUserTokenWithGoogle(): Promise<string | null> {
     let userToken: string | null = null;
 
@@ -50,16 +57,14 @@ class AuthService {
     }
 
     try {
-      WebBrowser.maybeCompleteAuthSession();
-
       Linking.addEventListener("url", handleTokenInUrl);
 
-      await WebBrowser.openAuthSessionAsync(
-        `${api.defaults.baseURL!}/google/redirect?appRedirectUri=${
-          Constants.linkingUri
-        }`,
-        Constants.linkingUri
-      );
+      const url = `${this.axiosAPI.defaults
+        .baseURL!}/google/redirect?appRedirectUri=${Constants.linkingUri}`;
+
+      console.log({ url });
+
+      await WebBrowser.openAuthSessionAsync(url, Constants.linkingUri);
 
       await holdForUrl();
 
@@ -75,7 +80,7 @@ class AuthService {
 
   async getUser(token: string): Promise<User | null> {
     try {
-      const response = await api.get<User>("/google/user", {
+      const response = await this.axiosAPI.get<User>("/google/user", {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -94,9 +99,13 @@ class AuthService {
     data: UpdateUserProps
   ): Promise<UpdateUserProps | null> {
     try {
-      const response = await api.patch<UpdateUserProps>("/users/me", data, {
-        headers: getAuthorizationHeader(token),
-      });
+      const response = await this.axiosAPI.patch<UpdateUserProps>(
+        "/users/me",
+        data,
+        {
+          headers: getAuthorizationHeader(token),
+        }
+      );
 
       return response.data;
     } catch (err: AxiosError | unknown) {
@@ -108,7 +117,7 @@ class AuthService {
 
   async logoutUser({ token }: LogoutUserProps): Promise<AxiosResponse> {
     try {
-      const response = await api.delete("/logout", {
+      const response = await this.axiosAPI.delete("/logout", {
         headers: getAuthorizationHeader(token),
       });
 
@@ -119,6 +128,19 @@ class AuthService {
       throw getAxiosError(err);
     }
   }
+
+  async cancelAccount({ token }: CancelAccountProps): Promise<AxiosResponse> {
+    try {
+      const response = await this.axiosAPI.delete("/users/me", {
+        headers: getAuthorizationHeader(token),
+      });
+
+      return response;
+    } catch (err: AxiosError | unknown) {
+      console.log("ERROR - auth.service - cancelAccount");
+      throw getAxiosError(err);
+    }
+  }
 }
 
-export default new AuthService();
+export default AuthService;

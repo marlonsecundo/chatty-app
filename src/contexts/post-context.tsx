@@ -13,6 +13,7 @@ import postService, {
   FetchPostProps,
   StorePostProps,
 } from "../services/post.service";
+import { useService } from "./service-context";
 
 interface PostContextProps {
   posts: Post[];
@@ -26,6 +27,9 @@ const PostContext = createContext<PostContextProps>({} as PostContextProps);
 export const PostProvider: React.FC = ({ children }) => {
   const [postPagResult, setPostPagResult] = useState<PaginationResult<Post>>();
   const [posts, setPosts] = useState<Post[]>([]);
+
+  const { serviceManager } = useService();
+  const { postService } = serviceManager;
 
   const fetchPosts = useCallback(
     async (args: FetchPostProps, replace: boolean) => {

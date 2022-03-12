@@ -1,4 +1,4 @@
-import { AxiosResponse } from "axios";
+import { Axios, AxiosResponse } from "axios";
 import React, {
   createContext,
   useCallback,
@@ -8,12 +8,14 @@ import React, {
 } from "react";
 import { STATUS_OK } from "../core/contants/axios-response-status";
 import { ContextHookException, NullException } from "../exceptions";
-import asyncStorageService from "../services/async-storage.service";
 
 import authService, {
+  CancelAccountProps,
   LogoutUserProps,
   UpdateUserProps,
 } from "../services/auth.service";
+import ServiceManager from "../services/service-manager";
+import { useService } from "./service-context";
 interface AuthContextProps {
   token?: string;
   user?: User;
@@ -25,6 +27,7 @@ interface AuthContextProps {
     data: UpdateUserProps
   ) => Promise<UpdateUserProps>;
   logoutUser: (args: LogoutUserProps) => Promise<AxiosResponse>;
+  cancelAccount: (args: CancelAccountProps) => Promise<AxiosResponse>;
 }
 
 const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
@@ -32,6 +35,15 @@ const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
 export const AuthProvider: React.FC = ({ children }) => {
   const [user, setUser] = useState<User>();
   const [token, setToken] = useState<string>();
+  const { serviceManager } = useService();
+
+  const { asyncStorageService, authService } = serviceManager;
+
+  const clearUserLocalData = useCallback(async () => {
+    setToken(undefined);
+    setUser(undefined);
+    await asyncStorageService.removeAsyncStorageData("@USER_TOKEN");
+  }, []);
 
   const signUserWithGoogle = useCallback(async () => {
     try {
@@ -106,10 +118,23 @@ export const AuthProvider: React.FC = ({ children }) => {
         const response = await authService.logoutUser(args);
 
         if (response?.status === STATUS_OK) {
-          setToken(undefined);
-          setUser(undefined);
-          await asyncStorageService.removeAsyncStorageData("@USER_TOKEN");
+          clearUserLocalData();
         }
+
+        return response;
+      } catch (error) {
+        throw error;
+      }
+    },
+    []
+  );
+
+  const cancelAccount = useCallback(
+    async (args: CancelAccountProps): Promise<AxiosResponse> => {
+      try {
+        const response = await authService.cancelAccount(args);
+
+        await clearUserLocalData();
 
         return response;
       } catch (error) {
@@ -129,6 +154,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         checkIsLoggedIn,
         updateUser,
         logoutUser,
+        cancelAccount,
         token,
         user,
       }}

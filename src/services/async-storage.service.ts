@@ -44,4 +44,4 @@ class AsyncStorageService {
   };
 }
 
-export default new AsyncStorageService();
+export default AsyncStorageService;

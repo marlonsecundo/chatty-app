@@ -7,7 +7,7 @@ import {
 import { Post } from "../models/post";
 import { getAuthorizationHeader } from "../utils/get-authorization-header";
 import getAxiosError from "../utils/get-axios-error";
-import api from "./api";
+import BaseService from "./base-service";
 
 export interface FetchPostProps extends FetchPaginationProps {
   token: string;
@@ -23,20 +23,23 @@ export interface LikePostProps {
   token: string;
 }
 
-class PostService {
+class PostService extends BaseService {
   async fetchPosts({
     token,
     page,
     limit,
   }: FetchPostProps): AxiosPaginationResult<Post> {
     try {
-      const response = await api.get<PaginationResult<Post>>("/posts", {
-        params: {
-          page,
-          limit,
-        },
-        headers: getAuthorizationHeader(token),
-      });
+      const response = await this.axiosAPI.get<PaginationResult<Post>>(
+        "/posts",
+        {
+          params: {
+            page,
+            limit,
+          },
+          headers: getAuthorizationHeader(token),
+        }
+      );
 
       return response.data;
     } catch (error) {
@@ -48,7 +51,7 @@ class PostService {
   async createPost({ content, token }: StorePostProps): Promise<Post | null> {
     try {
       const data = { content };
-      const response = await api.post("/posts", data, {
+      const response = await this.axiosAPI.post("/posts", data, {
         headers: getAuthorizationHeader(token),
       });
 
@@ -66,7 +69,7 @@ class PostService {
     try {
       const route = `/posts/${post.id}/likes`;
 
-      const response = await api.post(route, null, {
+      const response = await this.axiosAPI.post(route, null, {
         headers: getAuthorizationHeader(token),
       });
 
@@ -84,7 +87,7 @@ class PostService {
     try {
       const route = `/posts/${post.id}/likes/my`;
 
-      const response = await api.delete(route, {
+      const response = await this.axiosAPI.delete(route, {
         headers: getAuthorizationHeader(token),
       });
 
@@ -96,4 +99,4 @@ class PostService {
   }
 }
 
-export default new PostService();
+export default PostService;

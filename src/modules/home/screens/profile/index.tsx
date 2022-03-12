@@ -23,6 +23,7 @@ import Toast from "react-native-root-toast";
 import { SafeAreaView } from "react-native-safe-area-context";
 import BackHeaderButton from "../components/back-header-button";
 import HeaderBar from "../components/header-bar";
+import ProfileMenuDropDown from "./components/profile-menu-drop-down";
 import TextProfileFormInput from "./components/text-profile-form-input";
 import {
   Container,
@@ -46,6 +47,7 @@ export interface ProfileScreenProps {
 }
 
 const ProfileScreen: React.FC<ProfileScreenProps> = () => {
+  return <Row></Row>;
   const route = useRoute<RouteProp<HomeStackParamList, "Profile">>();
   const [user, setUser] = useState(route.params.user);
 
@@ -73,12 +75,12 @@ const ProfileScreen: React.FC<ProfileScreenProps> = () => {
       });
 
       setUser(responseUser);
-
-      setRefreshing(false);
     } catch (err) {
       const exception = getExceptionFromError(err);
       Toast.show(exception.message);
     }
+
+    setRefreshing(false);
   }, [token, user]);
 
   const onSubmit = useCallback(
@@ -98,17 +100,10 @@ const ProfileScreen: React.FC<ProfileScreenProps> = () => {
           },
         });
 
-        Toast.show("Updated!", {
-          duration: Toast.durations.SHORT,
-          position: Toast.positions.CENTER,
-        });
+        Toast.show("Updated!");
       } catch (err) {
         const exception = getExceptionFromError(err);
-
-        Toast.show(exception.message, {
-          duration: Toast.durations.LONG,
-          position: Toast.positions.CENTER,
-        });
+        Toast.show(exception.message);
       }
     },
     [token]
@@ -118,12 +113,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = () => {
     <Column height="100%">
       <HeaderBar
         leftContent={<BackHeaderButton></BackHeaderButton>}
-        rightContent={
-          <IconButton
-            withBackgroundColor={false}
-            icon={<FeatherIcon name="more-horizontal"></FeatherIcon>}
-          ></IconButton>
-        }
+        rightContent={<ProfileMenuDropDown></ProfileMenuDropDown>}
         title="Profile"
         transparent={true}
       ></HeaderBar>

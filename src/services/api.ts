@@ -1,19 +1,28 @@
-import axios from "axios";
-import { API_URL } from "../core/contants/dotenv";
+import axios, { AxiosInstance } from "axios";
 import camelCaseKeys from "camelcase-keys";
+import DotEnv from "../core/contants/dotenv";
 
-const api = axios.create({
-  baseURL: API_URL,
-});
+class API {
+  axiosApi!: AxiosInstance;
 
-export function camelCaseResponseConverter(response: any) {
-  const camelCaseData = camelCaseKeys(response.data, { deep: true });
+  init = async (envs: DotEnv) => {
+    this.axiosApi = axios.create({
+      baseURL: envs.API_URL,
+    });
 
-  return { ...response, data: camelCaseData };
+    this.axiosApi.interceptors.response.use(
+      this.camelCaseResponseConverter,
+      function (error: any) {
+        return Promise.reject(error);
+      }
+    );
+  };
+
+  camelCaseResponseConverter = (response: any) => {
+    const camelCaseData = camelCaseKeys(response.data, { deep: true });
+
+    return { ...response, data: camelCaseData };
+  };
 }
 
-api.interceptors.response.use(camelCaseResponseConverter, function (error) {
-  return Promise.reject(error);
-});
-
-export default api;
+export default API;
