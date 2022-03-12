@@ -1,7 +1,7 @@
 import { useAuth } from "@/src/contexts/auth-context";
+import { useService } from "@/src/contexts/service-context";
 import { Post } from "@/src/models/post";
 import { DefaultScreenProps, FeedScreenProps } from "@/src/routes/home.routes";
-import userService from "@/src/services/user.service";
 import { FeatherIcon } from "@/src/ui-components/icon";
 import IconButton from "@/src/ui-components/icon-button";
 import { Column } from "@/src/ui-components/layout/column";
@@ -13,12 +13,15 @@ import { getExceptionFromError } from "@/src/utils/get-exception-from-error";
 import { rfValuePX } from "@/src/utils/responsive-fontsize";
 import { useNavigation } from "@react-navigation/core";
 import React, { useCallback } from "react";
+import Toast from "react-native-root-toast";
 import { PostCardProps } from "../..";
 import { AvatarButton, AvatarButtonWrapper, AvatarImage } from "./styles";
 
 const PostCardHeader: React.FC<PostCardProps> = ({ post }) => {
   const { token } = useAuth();
   const navigation = useNavigation<DefaultScreenProps>();
+  const { serviceManager } = useService();
+  const { userService } = serviceManager;
 
   const renderProfileName = (
     <Body fontFamily="Roboto_700Bold" opacity={0.9}>
@@ -35,13 +38,14 @@ const PostCardHeader: React.FC<PostCardProps> = ({ post }) => {
   const handleAvatarButton = useCallback(async () => {
     try {
       const user = await userService.showUser({
-        token,
-        userId: post.user?.id,
+        token: token ?? "",
+        userId: post.user?.id ?? "",
       });
 
       navigation.navigate("Profile", { user });
     } catch (error) {
-      const exeption = getExceptionFromError(error);
+      const exception = getExceptionFromError(error);
+      Toast.show(exception.message);
     }
   }, [token]);
 
@@ -70,10 +74,10 @@ const PostCardHeader: React.FC<PostCardProps> = ({ post }) => {
             {renderUserName}
           </Column>
 
-          <IconButton
+          {/* <IconButton
             icon={<FeatherIcon name="more-vertical"></FeatherIcon>}
             withBackgroundColor={false}
-          ></IconButton>
+          ></IconButton> */}
         </Row>
 
         <LayoutContainer marginTop={rfValuePX(5)} />

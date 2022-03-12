@@ -57,6 +57,8 @@ const PostsFeedList: React.FC = () => {
     setRefreshing(true);
 
     await handleFetchPosts(1, true);
+
+    setRefreshing(false);
   }, []);
 
   useEffect(() => {
