@@ -1,7 +1,7 @@
 import { useAuth } from "@/src/contexts/auth-context";
+import { useService } from "@/src/contexts/service-context";
 import { STATUS_OK } from "@/src/core/contants/axios-response-status";
 import { Post } from "@/src/models/post";
-import postService from "@/src/services/post.service";
 import { AntDesignIcon, FeatherIcon } from "@/src/ui-components/icon";
 import IconButton from "@/src/ui-components/icon-button";
 import { Row } from "@/src/ui-components/layout/row";
@@ -16,6 +16,9 @@ import { Footer } from "./styles";
 
 const PostCardFooter: React.FC<PostCardProps> = ({ post }) => {
   const { user, token } = useAuth();
+  const { serviceManager } = useService();
+
+  const { postService } = serviceManager;
 
   const likedPost = post.likes?.find(
     (postLike) => postLike.userId === user?.id

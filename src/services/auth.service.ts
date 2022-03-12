@@ -13,7 +13,6 @@ export interface UpdateUserProps {
   profile: {
     name: string;
     description: string;
-    birth: string;
   };
 }
 

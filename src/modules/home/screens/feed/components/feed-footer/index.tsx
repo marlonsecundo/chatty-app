@@ -35,6 +35,8 @@ const FeedFooter: React.FC = () => {
           token: token ?? "",
         });
 
+        setInputVisible(false);
+
         actions.resetForm();
       } catch (err) {
         const exception = getExceptionFromError(err);

@@ -1,14 +1,11 @@
 import { useAuth } from "@/src/contexts/auth-context";
+import { useService } from "@/src/contexts/service-context";
 import { HomeStackParamList } from "@/src/routes/home.routes";
-import userService from "@/src/services/user.service";
-import { FeatherIcon } from "@/src/ui-components/icon";
-import IconButton from "@/src/ui-components/icon-button";
 import { Column } from "@/src/ui-components/layout/column";
 import { LayoutContainer } from "@/src/ui-components/layout/layout-container";
 import { Row } from "@/src/ui-components/layout/row";
 import { Line } from "@/src/ui-components/line";
 import { Body } from "@/src/ui-components/text/body";
-import { Headline } from "@/src/ui-components/text/headline";
 import { Subheader } from "@/src/ui-components/text/subheader";
 import { formatStringDate } from "@/src/utils/format";
 import { getExceptionFromError } from "@/src/utils/get-exception-from-error";
@@ -17,16 +14,13 @@ import { UpdateProfileSchema } from "@/src/validators/profile.validator";
 import { RouteProp, useRoute } from "@react-navigation/core";
 import { Formik, FormikHelpers } from "formik";
 import React, { useCallback, useState } from "react";
-import { KeyboardAvoidingView, RefreshControl } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { RefreshControl } from "react-native";
 import Toast from "react-native-root-toast";
-import { SafeAreaView } from "react-native-safe-area-context";
 import BackHeaderButton from "../components/back-header-button";
 import HeaderBar from "../components/header-bar";
 import ProfileMenuDropDown from "./components/profile-menu-drop-down";
 import TextProfileFormInput from "./components/text-profile-form-input";
 import {
-  Container,
   ProfilePicture,
   ProfileWrapper,
   UsernameText,
@@ -39,7 +33,6 @@ export interface ProfileFormValueProps {
   username: string;
   description: string;
   name: string;
-  birth: string;
 }
 
 export interface ProfileScreenProps {
@@ -47,22 +40,21 @@ export interface ProfileScreenProps {
 }
 
 const ProfileScreen: React.FC<ProfileScreenProps> = () => {
-  return <Row></Row>;
   const route = useRoute<RouteProp<HomeStackParamList, "Profile">>();
   const [user, setUser] = useState(route.params.user);
+  const { serviceManager } = useService();
+
+  const { userService } = serviceManager;
 
   const { user: loggedUser, token, updateUser } = useAuth();
   const [refreshing, setRefreshing] = React.useState(false);
 
   const isLoggedUserView = user?.id === loggedUser?.id;
 
-  const formatedDate = formatStringDate(user?.profile?.birth);
-
   const initialValues: ProfileFormValueProps = {
     username: user?.username ?? "-",
     description: user?.profile?.description ?? "no description",
     name: user?.profile?.name ?? "-",
-    birth: formatedDate ?? "-",
   };
 
   const onRefresh = React.useCallback(async () => {
@@ -89,12 +81,9 @@ const ProfileScreen: React.FC<ProfileScreenProps> = () => {
       actions: FormikHelpers<ProfileFormValueProps>
     ) => {
       try {
-        const birthDateValue = new Date(values.birth);
-
         const updatedData = await updateUser(token ?? "", {
           username: values.username,
           profile: {
-            birth: birthDateValue.toISOString(),
             description: values.description,
             name: values.name,
           },
@@ -196,15 +185,6 @@ const ProfileScreen: React.FC<ProfileScreenProps> = () => {
                     formValueKey="name"
                     label="name"
                   ></TextProfileFormInput>
-
-                  <LayoutContainer marginTop={rfValuePX(10)}></LayoutContainer>
-
-                  <TextProfileFormInput
-                    formValueKey="birth"
-                    label="birth"
-                  ></TextProfileFormInput>
-
-                  <LayoutContainer marginTop={rfValuePX(20)}></LayoutContainer>
 
                   <SubmitButton
                     onPress={() => {
