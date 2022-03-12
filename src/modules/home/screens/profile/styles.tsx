@@ -39,7 +39,6 @@ export const SubmitButton = styled(BorderlessButton)`
   justify-content: center;
   align-items: center;
   padding: ${rfValue(15)}px 0px;
-  border-radius: 7px;
 `;
 
 export const ProfileWrapper = styled(LayoutContainer)``;

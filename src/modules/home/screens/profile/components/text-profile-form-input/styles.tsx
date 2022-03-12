@@ -4,8 +4,13 @@ import { Caption } from "@/src/ui-components/text/caption";
 import { rfValuePX } from "@/src/utils/responsive-fontsize";
 import styled from "styled-components/native";
 
-export const InputWrapper = styled(Column)`
-  background-color: ${({ theme }) => theme.colors.card};
+interface Props {
+  editable: boolean;
+}
+
+export const InputWrapper = styled(Column)<Props>`
+  background-color: ${({ theme, editable }) =>
+    editable ? theme.colors.card : "transparent"};
   padding: 0px ${rfValuePX(10)};
   border-radius: 7px;
   padding-bottom: ${rfValuePX(5)};

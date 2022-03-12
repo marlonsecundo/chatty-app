@@ -14,6 +14,7 @@ interface Props {
   multiline?: boolean;
   textAlign?: "center" | "left" | "right";
   spadding?: string;
+  editable?: boolean;
 }
 import { useHeaderHeight } from "@react-navigation/elements";
 
@@ -24,6 +25,7 @@ const TextProfileFormInput: React.FC<Props> = ({
   textAlign,
   multiline,
   spadding,
+  editable = true,
 }) => {
   const { errors, handleChange, handleBlur, getFieldProps } =
     useFormikContext<any>();
@@ -38,7 +40,7 @@ const TextProfileFormInput: React.FC<Props> = ({
     <KeyboardAvoidingView style={{ flex: 1 }}>
       <Column width={width}>
         {error && <ErrorText>{error}</ErrorText>}
-        <InputWrapper>
+        <InputWrapper editable={editable}>
           {label && <Label>{label}</Label>}
           <StyledTextInput
             onChangeText={handleChange(formValueKey)}
@@ -46,6 +48,7 @@ const TextProfileFormInput: React.FC<Props> = ({
             value={value}
             textAlign={textAlign}
             multiline={multiline}
+            editable={editable}
             textAlignVertical={multiline ? "center" : "auto"}
           ></StyledTextInput>
         </InputWrapper>

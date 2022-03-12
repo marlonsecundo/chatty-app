@@ -13,7 +13,7 @@ import { rfValuePX } from "@/src/utils/responsive-fontsize";
 import { UpdateProfileSchema } from "@/src/validators/profile.validator";
 import { RouteProp, useRoute } from "@react-navigation/core";
 import { Formik, FormikHelpers } from "formik";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { RefreshControl } from "react-native";
 import Toast from "react-native-root-toast";
 import BackHeaderButton from "../components/back-header-button";
@@ -98,11 +98,21 @@ const ProfileScreen: React.FC<ProfileScreenProps> = () => {
     [token]
   );
 
+  const rightHeaderContent = isLoggedUserView ? (
+    <ProfileMenuDropDown />
+  ) : (
+    <LayoutContainer marginRight={rfValuePX(39)} />
+  );
+
+  useEffect(() => {
+    onRefresh();
+  }, []);
+
   return (
     <Column height="100%">
       <HeaderBar
         leftContent={<BackHeaderButton></BackHeaderButton>}
-        rightContent={<ProfileMenuDropDown></ProfileMenuDropDown>}
+        rightContent={rightHeaderContent}
         title="Profile"
         transparent={true}
       ></HeaderBar>
@@ -138,7 +148,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = () => {
 
                 <LayoutContainer
                   marginTop={rfValuePX(5)}
-                  marginBottom={rfValuePX(15)}
+                  marginBottom={rfValuePX(7)}
                 >
                   <UsernameText>
                     {user?.username ? `@${user?.username}` : "-"}
@@ -172,32 +182,33 @@ const ProfileScreen: React.FC<ProfileScreenProps> = () => {
                 </Row>
               </ProfileWrapper>
 
-              {isLoggedUserView && (
-                <Column smargin={`0px ${rfValuePX(30)}`}>
-                  <TextProfileFormInput
-                    formValueKey="username"
-                    label="username"
-                  ></TextProfileFormInput>
+              <Column smargin={`0px ${rfValuePX(30)}`}>
+                <TextProfileFormInput
+                  formValueKey="username"
+                  label="username"
+                  editable={isLoggedUserView}
+                ></TextProfileFormInput>
 
-                  <LayoutContainer marginTop={rfValuePX(10)}></LayoutContainer>
+                <LayoutContainer marginTop={rfValuePX(10)}></LayoutContainer>
 
-                  <TextProfileFormInput
-                    formValueKey="name"
-                    label="name"
-                  ></TextProfileFormInput>
+                <TextProfileFormInput
+                  formValueKey="name"
+                  label="name"
+                  editable={isLoggedUserView}
+                ></TextProfileFormInput>
 
-                  <SubmitButton
-                    onPress={() => {
-                      if (!isSubmitting) handleSubmit();
-                    }}
-                  >
-                    <Body>Update Profile</Body>
-                  </SubmitButton>
-
-                  <LayoutContainer marginTop={rfValuePX(10)}></LayoutContainer>
-                </Column>
-              )}
+                <LayoutContainer marginTop={rfValuePX(10)}></LayoutContainer>
+              </Column>
             </ScrollViewWrapper>
+            {isLoggedUserView && (
+              <SubmitButton
+                onPress={() => {
+                  if (!isSubmitting) handleSubmit();
+                }}
+              >
+                <Body>Update Profile</Body>
+              </SubmitButton>
+            )}
           </Column>
         )}
       </Formik>
