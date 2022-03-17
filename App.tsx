@@ -19,6 +19,7 @@ import DotEnv from "./src/core/contants/dotenv";
 import ServiceManager from "./src/services/service-manager";
 import { ServiceProvider } from "./src/contexts/service-context";
 import LoadingScreen from "./src/modules/auth/screens/loading";
+import NotificationHandler from "./src/core/notification-handler";
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -46,6 +47,7 @@ export default function App() {
   return (
     <RootSiblingParent>
       <ThemeProvider theme={theme}>
+        <NotificationHandler dotEnv={DotEnv.getI()} />
         <ServiceProvider serviceManager={ServiceManager.getI()}>
           <SafeAreaProvider>
             <AuthProvider>
