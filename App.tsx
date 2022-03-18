@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StatusBar, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { ThemeProvider } from "styled-components";
 import { useFonts } from "expo-font";
 import AppLoading from "expo-app-loading";
@@ -20,6 +20,7 @@ import ServiceManager from "./src/services/service-manager";
 import { ServiceProvider } from "./src/contexts/service-context";
 import LoadingScreen from "./src/modules/auth/screens/loading";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { StatusBar } from "expo-status-bar";
 // // import NotificationHandler from "./src/core/notification-handler";
 
 export default function App() {
@@ -48,6 +49,7 @@ export default function App() {
   return (
     <RootSiblingParent>
       <ThemeProvider theme={theme}>
+        <StatusBar style="dark" />
         {/* <NotificationHandler dotEnv={DotEnv.getI()} /> */}
         <ServiceProvider serviceManager={ServiceManager.getI()}>
           <SafeAreaProvider>
