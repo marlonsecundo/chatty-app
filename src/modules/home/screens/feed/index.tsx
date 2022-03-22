@@ -8,8 +8,10 @@ import HeaderBar from "../components/header-bar";
 import BackHeaderButton from "../components/back-header-button";
 import ProfileButton from "./components/profile-button";
 import LogoutButton from "./components/logout-button";
+import { useNavigation } from "@react-navigation/native";
 
 const FeedScreen: React.FC = () => {
+  const n = useNavigation();
   return (
     <PostProvider>
       <Column height="100%" alignItems="flex-start">

@@ -4,7 +4,12 @@ import SignInScreen from "../modules/auth/screens/signin";
 import AuthContext from "../contexts/auth-context";
 import LoadingScreen from "../modules/auth/screens/loading";
 
-const Stack = createNativeStackNavigator();
+export type AuthStackParamList = {
+  Loading: undefined;
+  SignIn: undefined;
+};
+
+const Stack = createNativeStackNavigator<AuthStackParamList>();
 
 function AuthStackRoutes() {
   const [loading, setLoading] = useState(true);

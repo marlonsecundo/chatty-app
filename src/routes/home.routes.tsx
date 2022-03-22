@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   createNativeStackNavigator,
@@ -10,6 +10,11 @@ import ProfileScreen, {
 } from "../modules/home/screens/profile";
 import { View } from "react-native";
 import styled from "styled-components/native";
+import { RouteProps } from ".";
+import { useNotification } from "../contexts/notification-context";
+import { useNavigation } from "@react-navigation/native";
+import { useService } from "../contexts/service-context";
+import { useAuth } from "../contexts/auth-context";
 
 export type HomeStackParamList = {
   Feed: undefined;
@@ -18,22 +23,32 @@ export type HomeStackParamList = {
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
-export type FeedScreenProps = NativeStackNavigationProp<
-  HomeStackParamList,
-  "Feed"
->;
-
-export type DefaultScreenProps = NativeStackNavigationProp<HomeStackParamList>;
+export type HomeStackNavProps = NativeStackNavigationProp<HomeStackParamList>;
 
 const BackgroundRootView = styled.View`
   background-color: ${({ theme }) => theme.colors.background};
   flex: 1;
 `;
 
-function HomeStackRoutes() {
+function HomeStackRoutes({ initialRoute }: RouteProps) {
+  const { handleNotificationOpenedApp, handleMessageToken } = useNotification();
+  const { token } = useAuth();
+  const { serviceManager } = useService();
+  const { notificationService } = serviceManager;
+
+  const navigation = useNavigation<HomeStackNavProps>();
+
+  useEffect(() => {
+    // const disposer = handleNotificationOpenedApp(navigation);
+    handleMessageToken(notificationService, token ?? "");
+    // return disposer;
+  }, []);
   return (
     <BackgroundRootView>
-      <Stack.Navigator defaultScreenOptions={{}}>
+      <Stack.Navigator
+        initialRouteName={initialRoute}
+        defaultScreenOptions={{}}
+      >
         <Stack.Screen
           name="Feed"
           component={FeedScreen}

@@ -1,13 +1,9 @@
 import { useAuth } from "@/src/contexts/auth-context";
 import { useService } from "@/src/contexts/service-context";
-import { Post } from "@/src/models/post";
-import { DefaultScreenProps, FeedScreenProps } from "@/src/routes/home.routes";
-import { FeatherIcon } from "@/src/ui-components/icon";
-import IconButton from "@/src/ui-components/icon-button";
+import { HomeStackNavProps } from "@/src/routes/home.routes";
 import { Column } from "@/src/ui-components/layout/column";
 import { LayoutContainer } from "@/src/ui-components/layout/layout-container";
 import { Row } from "@/src/ui-components/layout/row";
-import LazyImage from "@/src/ui-components/lazy-image";
 import { Body } from "@/src/ui-components/text/body";
 import { getExceptionFromError } from "@/src/utils/get-exception-from-error";
 import { rfValuePX } from "@/src/utils/responsive-fontsize";
@@ -19,7 +15,7 @@ import { AvatarButton, AvatarButtonWrapper, AvatarImage } from "./styles";
 
 const PostCardHeader: React.FC<PostCardProps> = ({ post }) => {
   const { token } = useAuth();
-  const navigation = useNavigation<DefaultScreenProps>();
+  const navigation = useNavigation<HomeStackNavProps>();
   const { serviceManager } = useService();
   const { userService } = serviceManager;
 

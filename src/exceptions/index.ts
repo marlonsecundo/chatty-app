@@ -32,6 +32,12 @@ export function UnknowException(args: Exception): Exception {
   return { ...args, name, itype: "EXCEPTION" };
 }
 
+export function InvalidRouteException(args: Exception): Exception {
+  const name = "InvalidRouteException";
+
+  return { ...args, name, itype: "EXCEPTION" };
+}
+
 export function ContextHookException({
   hookName,
 }: {

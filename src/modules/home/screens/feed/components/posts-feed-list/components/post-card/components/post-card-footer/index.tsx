@@ -65,7 +65,6 @@ const PostCardFooter: React.FC<PostCardProps> = ({ post }) => {
       }
 
       if (response?.status !== STATUS_OK) {
-        console.log(response?.status);
         const text = liked ? "dislike" : "like";
         Toast.show(`Failed to ${text} the post`);
         return;

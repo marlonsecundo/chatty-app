@@ -1,11 +1,11 @@
 import { useAuth } from "@/src/contexts/auth-context";
-import { FeedScreenProps } from "@/src/routes/home.routes";
+import { HomeStackNavProps } from "@/src/routes/home.routes";
 import { useNavigation } from "@react-navigation/native";
 import React, { useCallback } from "react";
 import { ProfileImage, StyledButton } from "./styles";
 
 const ProfileButton: React.FC = () => {
-  const navigation = useNavigation<FeedScreenProps>();
+  const navigation = useNavigation<HomeStackNavProps>();
   const { user } = useAuth();
 
   const onProfilePress = useCallback(() => {
