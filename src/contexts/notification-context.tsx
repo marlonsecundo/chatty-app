@@ -81,15 +81,15 @@ export const NotificationProvider: React.FC = ({ children }) => {
 
   const handleBackgroundMessage = useCallback(
     async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
+      const fcmBaseMessage = remoteMessage.data as BaseMessage;
+
       await Notifications.scheduleNotificationAsync({
         content: {
-          title: "You've got mail! 📬",
-          body: "Here is the notification body",
-          data: { data: "goes here" },
+          title: fcmBaseMessage.title,
+          body: fcmBaseMessage.body,
         },
         trigger: { seconds: 1 },
       });
-      console.log({ remoteMessage });
     },
     []
   );
@@ -100,8 +100,6 @@ export const NotificationProvider: React.FC = ({ children }) => {
     messaging().setBackgroundMessageHandler(handleBackgroundMessage);
 
     setNotificationLoaded(true);
-
-    console.log({ status });
   }, []);
 
   useEffect(() => {
