@@ -35,15 +35,14 @@ export const NotificationProvider: React.FC = ({ children }) => {
    * When the application is running, but in the background.
    */
   const handleNotificationOpenedApp = useCallback(
-    (navigationHook: NavigationProp<HomeStackParamList>): (() => void) => {
+    (navigator: NavigationProp<HomeStackParamList>): (() => void) => {
       const disposer = messaging().onNotificationOpenedApp((remoteMessage) => {
         try {
-          const route = remoteMessage.data?.route as keyof HomeStackParamList;
-          const params = remoteMessage.data?.params as any;
+          const data = remoteMessage.data as BaseMessage;
 
-          navigationHook.navigate(route, params);
+          navigateByMessage(navigator, data);
         } catch (error) {
-          throw InvalidRouteException({ data: error, message: String(error) });
+          throw error;
         }
       });
 
@@ -63,6 +62,7 @@ export const NotificationProvider: React.FC = ({ children }) => {
         if (initalNotf.data?.initialRoute !== null) {
           setInitialRoute(
             initalNotf.data?.initialRoute as keyof HomeStackParamList
+            
           );
         }
       } catch (error) {
@@ -79,24 +79,28 @@ export const NotificationProvider: React.FC = ({ children }) => {
     []
   );
 
-  const handleBackgroundMessage = useCallback(
-    async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
-      const fcmBaseMessage = remoteMessage.data as BaseMessage;
+  const navigateByMessage = useCallback(
+    (navigator: NavigationProp<HomeStackParamList>, message: BaseMessage) => {
+      if (message.itype == "new:postLike") {
+        const newLike = message as NewPostLikeMessage;
 
-      await Notifications.scheduleNotificationAsync({
-        content: {
-          title: fcmBaseMessage.title,
-          body: fcmBaseMessage.body,
-        },
-        trigger: { seconds: 1 },
-      });
+        const route = newLike.route as keyof HomeStackParamList;
+        const params = { postId: newLike.postId };
+
+        navigator.navigate(route, params);
+      }
     },
+    []
+  );
+
+  const handleBackgroundMessage = useCallback(
+    async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {},
     []
   );
 
   const init = useCallback(async () => {
     const status = await messaging().requestPermission();
-    // await handleInitialNotification();
+    await handleInitialNotification();
     messaging().setBackgroundMessageHandler(handleBackgroundMessage);
 
     setNotificationLoaded(true);

@@ -17,7 +17,11 @@ import ListEnd from "./components/list-end";
 import { ListRenderItem, RefreshControl } from "react-native";
 import { View } from "@motify/components";
 
-const PostsFeedList: React.FC = () => {
+interface Props {
+  postId?: string;
+}
+
+const PostsFeedList: React.FC<Props> = ({ postId }) => {
   const { token } = useContext(AuthContext);
   const { posts, fetchPosts, postPagResult } = usePost();
   const fistTimeRef = useRef(true);
@@ -26,9 +30,9 @@ const PostsFeedList: React.FC = () => {
   const [refreshing, setRefreshing] = React.useState(false);
 
   const handleFetchPosts = useCallback(
-    async (page: number, replace: boolean = false) => {
+    async (page: number, replace: boolean = false, id?: string) => {
       try {
-        await fetchPosts({ token: token ?? "", page, limit: 10 }, replace);
+        await fetchPosts({ token: token ?? "", page, limit: 10, id }, replace);
       } catch (err) {
         const exception = getExceptionFromError(err);
 
@@ -62,8 +66,8 @@ const PostsFeedList: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    handleFetchPosts(1, true);
-  }, []);
+    handleFetchPosts(1, true, postId);
+  }, [postId]);
 
   // If is the first time that fetch the posts and its your result is empty, so the user reached the end of the feed
   useEffect(() => {

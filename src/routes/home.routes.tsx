@@ -4,7 +4,7 @@ import {
   createNativeStackNavigator,
   NativeStackNavigationProp,
 } from "@react-navigation/native-stack";
-import FeedScreen from "../modules/home/screens/feed";
+import FeedScreen, { FeedScreenProps } from "../modules/home/screens/feed";
 import ProfileScreen, {
   ProfileScreenProps,
 } from "../modules/home/screens/profile";
@@ -17,7 +17,7 @@ import { useService } from "../contexts/service-context";
 import { useAuth } from "../contexts/auth-context";
 
 export type HomeStackParamList = {
-  Feed: undefined;
+  Feed: FeedScreenProps;
   Profile: ProfileScreenProps;
 };
 
@@ -39,9 +39,9 @@ function HomeStackRoutes({ initialRoute }: RouteProps) {
   const navigation = useNavigation<HomeStackNavProps>();
 
   useEffect(() => {
-    // const disposer = handleNotificationOpenedApp(navigation);
+    const disposer = handleNotificationOpenedApp(navigation);
     handleMessageToken(notificationService, token ?? "");
-    // return disposer;
+    return disposer;
   }, []);
   return (
     <BackgroundRootView>

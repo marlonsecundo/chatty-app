@@ -8,4 +8,5 @@ interface BaseMessage {
 interface NewPostLikeMessage extends BaseMessage {
   itype: "new:postLike";
   postId: string;
+  route: string;
 }

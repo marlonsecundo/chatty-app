@@ -17,7 +17,6 @@ import { useAppConfig } from "./src/contexts/app-config-context";
 export default function App() {
   const { isAllLoadingDone } = useAppConfig();
 
-  console.log({ isAllLoadingDone });
   if (!isAllLoadingDone) {
     return <AppLoading />;
   }

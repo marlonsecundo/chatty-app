@@ -9,9 +9,18 @@ import BackHeaderButton from "../components/back-header-button";
 import ProfileButton from "./components/profile-button";
 import LogoutButton from "./components/logout-button";
 import { useNavigation } from "@react-navigation/native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { HomeStackParamList } from "@/src/routes/home.routes";
 
-const FeedScreen: React.FC = () => {
-  const n = useNavigation();
+export interface FeedScreenProps {
+  postId?: string;
+}
+
+type Props = NativeStackScreenProps<HomeStackParamList, "Feed">;
+
+const FeedScreen: React.FC<Props> = ({ route }) => {
+  const postId = route.params?.postId;
+
   return (
     <PostProvider>
       <Column height="100%" alignItems="flex-start">
@@ -20,7 +29,7 @@ const FeedScreen: React.FC = () => {
           title="Feed"
           rightContent={<ProfileButton></ProfileButton>}
         ></HeaderBar>
-        <PostsFeedList></PostsFeedList>
+        <PostsFeedList postId={postId}></PostsFeedList>
         <Footer></Footer>
       </Column>
     </PostProvider>
