@@ -10,11 +10,11 @@ import ProfileScreen, {
 } from "../modules/home/screens/profile";
 import { View } from "react-native";
 import styled from "styled-components/native";
-import { RouteProps } from ".";
 import { useNotification } from "../contexts/notification-context";
 import { useNavigation } from "@react-navigation/native";
 import { useService } from "../contexts/service-context";
 import { useAuth } from "../contexts/auth-context";
+import { useAppConfig } from "../contexts/app-config-context";
 
 export type HomeStackParamList = {
   Feed: FeedScreenProps;
@@ -30,8 +30,9 @@ const BackgroundRootView = styled.View`
   flex: 1;
 `;
 
-function HomeStackRoutes({ initialRoute }: RouteProps) {
+function HomeStackRoutes() {
   const { handleNotificationOpenedApp, handleMessageToken } = useNotification();
+  const { initialRoute } = useAppConfig();
   const { token } = useAuth();
   const { serviceManager } = useService();
   const { notificationService } = serviceManager;
@@ -43,6 +44,7 @@ function HomeStackRoutes({ initialRoute }: RouteProps) {
     handleMessageToken(notificationService, token ?? "");
     return disposer;
   }, []);
+
   return (
     <BackgroundRootView>
       <Stack.Navigator

@@ -5,18 +5,10 @@ import AuthStackRoutes, { AuthStackParamList } from "./auth.routes";
 import HomeStackRoutes, { HomeStackParamList } from "./home.routes";
 import { darkTheme } from "../styles/theme";
 
-export interface RouteProps {
-  initialRoute?: keyof HomeStackParamList;
-}
-
-const Routes: React.FC<RouteProps> = ({ initialRoute }) => {
+const Routes: React.FC = () => {
   const { signed } = useContext(AuthContext);
 
-  const stackRoutes = signed ? (
-    <HomeStackRoutes initialRoute={initialRoute} />
-  ) : (
-    <AuthStackRoutes />
-  );
+  const stackRoutes = signed ? <HomeStackRoutes /> : <AuthStackRoutes />;
 
   return (
     <NavigationContainer theme={darkTheme}>{stackRoutes}</NavigationContainer>

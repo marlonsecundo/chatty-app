@@ -37,8 +37,9 @@ export const NotificationProvider: React.FC = ({ children }) => {
   const handleNotificationOpenedApp = useCallback(
     (navigator: NavigationProp<HomeStackParamList>): (() => void) => {
       const disposer = messaging().onNotificationOpenedApp((remoteMessage) => {
+        console.log({ remoteMessage });
         try {
-          const data = remoteMessage.data as BaseMessage;
+          const data = remoteMessage.data as BaseMessageData;
 
           navigateByMessage(navigator, data);
         } catch (error) {
@@ -55,15 +56,18 @@ export const NotificationProvider: React.FC = ({ children }) => {
    * When the application is opened from a quit state.
    */
   const handleInitialNotification = useCallback(async () => {
-    const initalNotf = await messaging().getInitialNotification();
+    const remoteMessage = await messaging().getInitialNotification();
 
-    if (initalNotf) {
+    if (remoteMessage) {
       try {
-        if (initalNotf.data?.initialRoute !== null) {
-          setInitialRoute(
-            initalNotf.data?.initialRoute as keyof HomeStackParamList
-            
-          );
+        const baseData = remoteMessage.data as BaseMessageData;
+
+        if (baseData.itype === "new:postLike") {
+          const newLikeData = baseData as NewPostLikeMessageData;
+
+          if (newLikeData.route !== null) {
+            setInitialRoute(newLikeData.route as keyof HomeStackParamList);
+          }
         }
       } catch (error) {
         throw InvalidRouteException({ data: error, message: String(error) });
@@ -80,9 +84,12 @@ export const NotificationProvider: React.FC = ({ children }) => {
   );
 
   const navigateByMessage = useCallback(
-    (navigator: NavigationProp<HomeStackParamList>, message: BaseMessage) => {
-      if (message.itype == "new:postLike") {
-        const newLike = message as NewPostLikeMessage;
+    (
+      navigator: NavigationProp<HomeStackParamList>,
+      messageData: BaseMessageData
+    ) => {
+      if (messageData.itype == "new:postLike") {
+        const newLike = messageData as NewPostLikeMessageData;
 
         const route = newLike.route as keyof HomeStackParamList;
         const params = { postId: newLike.postId };
@@ -93,15 +100,9 @@ export const NotificationProvider: React.FC = ({ children }) => {
     []
   );
 
-  const handleBackgroundMessage = useCallback(
-    async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {},
-    []
-  );
-
   const init = useCallback(async () => {
     const status = await messaging().requestPermission();
     await handleInitialNotification();
-    messaging().setBackgroundMessageHandler(handleBackgroundMessage);
 
     setNotificationLoaded(true);
   }, []);

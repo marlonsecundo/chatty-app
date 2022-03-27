@@ -12,9 +12,10 @@ import { getExceptionFromError } from "@/src/utils/get-exception-from-error";
 import { rfValuePX } from "@/src/utils/responsive-fontsize";
 import { UpdateProfileSchema } from "@/src/validators/profile.validator";
 import { RouteProp, useRoute } from "@react-navigation/core";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Formik, FormikHelpers } from "formik";
 import React, { useCallback, useEffect, useState } from "react";
-import { RefreshControl } from "react-native";
+import { RefreshControl, View } from "react-native";
 import Toast from "react-native-root-toast";
 import BackHeaderButton from "../components/back-header-button";
 import HeaderBar from "../components/header-bar";
@@ -39,9 +40,11 @@ export interface ProfileScreenProps {
   user?: User | null;
 }
 
-const ProfileScreen: React.FC<ProfileScreenProps> = () => {
-  const route = useRoute<RouteProp<HomeStackParamList, "Profile">>();
-  const [user, setUser] = useState(route.params.user);
+type Props = NativeStackScreenProps<HomeStackParamList, "Profile">;
+
+const ProfileScreen: React.FC<Props> = ({ route }) => {
+  const [user, setUser] = useState(route.params?.user);
+
   const { serviceManager } = useService();
 
   const { userService } = serviceManager;
