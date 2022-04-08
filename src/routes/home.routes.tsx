@@ -17,8 +17,8 @@ import { useAuth } from "../contexts/auth-context";
 import { useAppConfig } from "../contexts/app-config-context";
 
 export type HomeStackParamList = {
-  Feed: FeedScreenProps;
-  Profile: ProfileScreenProps;
+  Feed?: FeedScreenProps;
+  Profile?: ProfileScreenProps;
 };
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();

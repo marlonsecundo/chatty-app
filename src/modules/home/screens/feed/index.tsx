@@ -11,6 +11,7 @@ import LogoutButton from "./components/logout-button";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HomeStackParamList } from "@/src/routes/home.routes";
+import PostLikesBottomSheet from "./components/post-likes-bottom-sheet";
 
 export interface FeedScreenProps {
   postId?: string;
@@ -32,6 +33,7 @@ const FeedScreen: React.FC<Props> = ({ route }) => {
         <PostsFeedList postId={postId}></PostsFeedList>
         <Footer></Footer>
       </Column>
+      <PostLikesBottomSheet></PostLikesBottomSheet>
     </PostProvider>
   );
 };

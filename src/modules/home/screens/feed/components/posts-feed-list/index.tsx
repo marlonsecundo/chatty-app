@@ -59,6 +59,7 @@ const PostsFeedList: React.FC<Props> = ({ postId }) => {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
+    setReachedTheEnd(false);
 
     await handleFetchPosts(1, true);
 
