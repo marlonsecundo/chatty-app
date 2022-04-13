@@ -6,9 +6,8 @@ import { Body } from "@/src/ui-components/text/body";
 import { rfPercentage, rfValuePX } from "@/src/utils/responsive-fontsize";
 import React from "react";
 import { View } from "react-native";
-import { UserImage } from "./styles";
 
-// import { Container } from './styles';
+import { DarkBody, DarkCaption, UserImage } from "./styles";
 
 interface Props {
   postLike: PostLike;
@@ -21,7 +20,11 @@ const PostLikeCard: React.FC<Props> = ({ postLike }) => {
       <UserImage imageUrl={user?.profile?.imageUrl ?? ""}></UserImage>
 
       <LayoutContainer marginLeft={rfValuePX(15)} justifyContent="center">
-        <Body>{user?.username}</Body>
+        <DarkBody>{user?.username}</DarkBody>
+      </LayoutContainer>
+
+      <LayoutContainer alignItems="flex-end" justifyContent="center" sflex={1}>
+        <DarkCaption opacity={0.4}>{postLike.timeSince}</DarkCaption>
       </LayoutContainer>
     </Row>
   );
