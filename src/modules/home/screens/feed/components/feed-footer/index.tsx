@@ -8,11 +8,11 @@ import { getExceptionFromError } from "@/src/utils/get-exception-from-error";
 import { rfValue, rfValuePX } from "@/src/utils/responsive-fontsize";
 import { StorePostSchema } from "@/src/validators/post.validator";
 import { Formik, FormikHelpers } from "formik";
-import { MotiView } from "moti";
 import React, { useCallback, useState } from "react";
 import Toast from "react-native-root-toast";
 import TextFormInput from "./components/text-form-input";
 import { FooterWrapper, ActionsWrapper } from "./styles";
+import { MotiView } from "moti";
 
 export interface StorePostFormValueProps {
   content: string;

@@ -1,61 +1,122 @@
 import { Column } from "@/src/ui-components/layout/column";
-import React, { useCallback, useMemo, useRef } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Text, StyleSheet, RefreshControl, ListRenderItem } from "react-native";
 import { View } from "react-native";
 import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import PostLikeCard from "./components/post-like-card";
 import { PostLike } from "@/src/models/post-like";
 import { Post } from "@/src/models/post";
+import { PaginationResult } from "@/src/models/pagination-result";
+import { useAuth } from "@/src/contexts/auth-context";
+import { getExceptionFromError } from "@/src/utils/get-exception-from-error";
+import Toast from "react-native-root-toast";
+import { useService } from "@/src/contexts/service-context";
+import ListEnd from "../posts-feed-list/components/list-end";
+import LoadingPosts from "../posts-feed-list/components/loading-posts";
+import { usePost } from "@/src/contexts/post-context";
 
-const PostLikesBottomSheet: React.FC = () => {
+const PostLikesBottomSheet: React.FC = ({}) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
-
   const snapPoints = useMemo(() => ["50%"], []);
+  const handleSheetChanges = useCallback((index: number) => {
+    // -1 means that the bottom sheet is closed
+    if (index == -1) {
+      selectPost(null);
+    }
+  }, []);
 
-  const handleSheetChanges = useCallback((index: number) => {}, []);
+  const [reachedTheEnd, setReachedTheEnd] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const postLike: PostLike = {
-    postId: "2a40049d-921e-4a7a-b2e9-b45600b5ac9d",
-    userId: "bb22982d-e80f-481d-b1e9-82ac305a45d2",
-    user: {
-      id: "bb22982d-e80f-481d-b1e9-82ac305a45d2",
-      username: "dfsodkfsdf",
-      profile: {
-        imageUrl:
-          "https://lh3.googleusercontent.com/a-/AOh14GgloPD3GE3827pAuoJgnZ9wYPDCFFM2ffj7UaMD=s96-c",
-      },
-      postLikesCount: 0,
-      postsCount: 0,
+  const [postLikesPagResult, setPostLikesPagResult] =
+    useState<PaginationResult<PostLike> | null>(null);
+  const [postLikes, setPostLikes] = useState<PostLike[]>([]);
+
+  const { token } = useAuth();
+  const { serviceManager } = useService();
+  const { postService } = serviceManager;
+
+  const { selectedPost, selectPost } = usePost();
+
+  const handleFetchPostsLikes = useCallback(
+    async (page: number, reset?: boolean) => {
+      try {
+        const result = await postService.fetchPostsLikes({
+          token: token ?? "",
+          page,
+          limit: 8,
+          postId: selectedPost?.id ?? "",
+        });
+
+        setPostLikesPagResult(result);
+
+        if (result?.data) {
+          setPostLikes((prevState) => {
+            if (reset) {
+              return result.data;
+            }
+
+            const data = [...prevState, ...result?.data];
+
+            return data;
+          });
+        }
+      } catch (err) {
+        const exception = getExceptionFromError(err);
+
+        Toast.show(exception.message);
+      }
     },
-    timeSince: "1 minuto atras",
-  };
+    [token]
+  );
 
-  const likes = [
-    postLike,
-    postLike,
-    postLike,
-    postLike,
-    postLike,
-    postLike,
-    postLike,
-    postLike,
-    postLike,
-    postLike,
-    postLike,
-    postLike,
-    postLike,
-    postLike,
-    postLike,
-  ];
+  const handleOnReachEnd = useCallback(() => {
+    if (
+      postLikesPagResult !== null &&
+      postLikesPagResult?.meta.currentPage === postLikesPagResult?.meta.lastPage
+    ) {
+      setReachedTheEnd(true);
+      return;
+    }
+
+    if (!postLikesPagResult?.meta.currentPage) return;
+
+    handleFetchPostsLikes(postLikesPagResult?.meta.currentPage + 1);
+  }, [postLikesPagResult]);
 
   const renderItem: ListRenderItem<PostLike> = useCallback(({ item }) => {
     return <PostLikeCard key={item.userId} postLike={item}></PostLikeCard>;
   }, []);
 
+  const listFooterComp = reachedTheEnd ? (
+    <ListEnd
+      lightColors={true}
+      text="Wow! Seens that you reached the end of the comments!"
+    ></ListEnd>
+  ) : (
+    <LoadingPosts text="Loading new comments" lightColors={true}></LoadingPosts>
+  );
+
+  useEffect(() => {}, []);
+
+  useEffect(() => {
+    if (selectedPost) {
+      bottomSheetRef.current?.expand();
+
+      handleFetchPostsLikes(1, true);
+    }
+  }, [selectedPost]);
+
   return (
     <BottomSheet
       ref={bottomSheetRef}
-      index={0}
+      index={-1}
       snapPoints={snapPoints}
       enablePanDownToClose={true}
       onChange={handleSheetChanges}
@@ -63,14 +124,11 @@ const PostLikesBottomSheet: React.FC = () => {
     >
       <BottomSheetFlatList
         style={{ flex: 1 }}
-        data={likes}
+        data={postLikes}
         renderItem={renderItem}
         onEndReached={handleOnReachEnd}
         onEndReachedThreshold={0.05}
         ListFooterComponent={listFooterComp}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
       />
     </BottomSheet>
   );

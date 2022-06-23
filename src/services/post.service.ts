@@ -5,6 +5,7 @@ import {
   PaginationResult,
 } from "../models/pagination-result";
 import { Post } from "../models/post";
+import { PostLike } from "../models/post-like";
 import { getAuthorizationHeader } from "../utils/get-authorization-header";
 import getAxiosError from "../utils/get-axios-error";
 import BaseService from "./base-service";
@@ -22,6 +23,11 @@ export interface StorePostProps {
 export interface LikePostProps {
   post: Post;
   token: string;
+}
+
+export interface FetchPostLikesProps extends FetchPaginationProps {
+  token: string;
+  postId: string;
 }
 
 class PostService extends BaseService {
@@ -97,6 +103,30 @@ class PostService extends BaseService {
       return response;
     } catch (error) {
       console.log("ERROR - post.service - removePostLike");
+      throw getAxiosError(error);
+    }
+  }
+
+  async fetchPostsLikes({
+    token,
+    page,
+    limit,
+    postId,
+  }: FetchPostLikesProps): AxiosPaginationResult<PostLike> {
+    try {
+      const response = await this.axiosAPI.get<PaginationResult<PostLike>>(
+        `/posts/${postId}/likes`,
+        {
+          params: {
+            page,
+            limit,
+          },
+          headers: getAuthorizationHeader(token),
+        }
+      );
+
+      return response.data;
+    } catch (error) {
       throw getAxiosError(error);
     }
   }

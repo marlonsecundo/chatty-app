@@ -27,7 +27,7 @@ const PostCardHeader: React.FC<PostCardProps> = ({ post }) => {
 
   const renderUserName = (
     <Body color="primary" opacity={0.6}>
-      {"@" + post.user?.username ?? "-"}
+      {post.user?.username ? "@" + post.user?.username : "-"}
     </Body>
   );
 

@@ -37,7 +37,6 @@ export const NotificationProvider: React.FC = ({ children }) => {
   const handleNotificationOpenedApp = useCallback(
     (navigator: NavigationProp<HomeStackParamList>): (() => void) => {
       const disposer = messaging().onNotificationOpenedApp((remoteMessage) => {
-        console.log({ remoteMessage });
         try {
           const data = remoteMessage.data as BaseMessageData;
 

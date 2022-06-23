@@ -20,6 +20,8 @@ interface PostContextProps {
   fetchPosts: (args: FetchPostProps, replace: boolean) => Promise<void>;
   storePost: (args: StorePostProps) => Promise<Post>;
   postPagResult?: PaginationResult<Post>;
+  selectPost: (post: Post | null) => void;
+  selectedPost: Post | null;
 }
 
 const PostContext = createContext<PostContextProps>({} as PostContextProps);
@@ -27,6 +29,7 @@ const PostContext = createContext<PostContextProps>({} as PostContextProps);
 export const PostProvider: React.FC = ({ children }) => {
   const [postPagResult, setPostPagResult] = useState<PaginationResult<Post>>();
   const [posts, setPosts] = useState<Post[]>([]);
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
   const { serviceManager } = useService();
   const { postService } = serviceManager;
@@ -73,9 +76,20 @@ export const PostProvider: React.FC = ({ children }) => {
     }
   }, []);
 
+  const selectPost = (post: Post | null) => {
+    setSelectedPost(post);
+  };
+
   return (
     <PostContext.Provider
-      value={{ fetchPosts, posts, postPagResult, storePost }}
+      value={{
+        fetchPosts,
+        posts,
+        postPagResult,
+        storePost,
+        selectPost,
+        selectedPost,
+      }}
     >
       {children}
     </PostContext.Provider>

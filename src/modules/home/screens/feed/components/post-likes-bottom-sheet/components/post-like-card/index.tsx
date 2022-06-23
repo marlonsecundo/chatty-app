@@ -20,7 +20,7 @@ const PostLikeCard: React.FC<Props> = ({ postLike }) => {
       <UserImage imageUrl={user?.profile?.imageUrl ?? ""}></UserImage>
 
       <LayoutContainer marginLeft={rfValuePX(15)} justifyContent="center">
-        <DarkBody>{user?.username}</DarkBody>
+        <DarkBody>{user?.username ?? "-"}</DarkBody>
       </LayoutContainer>
 
       <LayoutContainer alignItems="flex-end" justifyContent="center" sflex={1}>

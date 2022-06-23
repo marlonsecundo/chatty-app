@@ -15,7 +15,6 @@ import { Post } from "@/src/models/post";
 import LoadingPosts from "./components/loading-posts";
 import ListEnd from "./components/list-end";
 import { ListRenderItem, RefreshControl } from "react-native";
-import { View } from "@motify/components";
 
 interface Props {
   postId?: string;

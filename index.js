@@ -1,5 +1,4 @@
 import { registerRootComponent } from "expo";
-import { View } from "moti";
 
 import App from "./App";
 import { AppConfigProvider } from "./src/contexts/app-config-context";

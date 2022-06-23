@@ -21,6 +21,8 @@ interface ContainerProps {
   overflow?: string;
 
   backgroundColor?: string;
+
+  opacity?: string;
 }
 
 export const LayoutContainer = styled.View<ContainerProps>`
@@ -37,6 +39,7 @@ export const LayoutContainer = styled.View<ContainerProps>`
     backgroundColor,
     sright,
     overflow,
+    opacity,
   }) => `
   margin: ${smargin ?? "0px"};
   justify-content: ${justifyContent ?? "flex-start"};
@@ -50,6 +53,7 @@ export const LayoutContainer = styled.View<ContainerProps>`
   padding: ${spadding ?? "0px"};
   background-color: ${backgroundColor ?? "transparent"};
   overflow: ${overflow ?? "visible"}
+  opacity: ${opacity ?? "1"}
   `}
   ${({ paddingBottom }) =>
     paddingBottom ? `padding-bottom: ${paddingBottom}` : ""};

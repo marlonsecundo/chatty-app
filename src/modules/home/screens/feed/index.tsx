@@ -1,6 +1,6 @@
-import { PostProvider } from "@/src/contexts/post-context";
+import { PostProvider, usePost } from "@/src/contexts/post-context";
 import { Column } from "@/src/ui-components/layout/column";
-import React from "react";
+import React, { useEffect } from "react";
 import Footer from "./components/feed-footer";
 import Header from "../components/header-bar";
 import PostsFeedList from "./components/posts-feed-list";

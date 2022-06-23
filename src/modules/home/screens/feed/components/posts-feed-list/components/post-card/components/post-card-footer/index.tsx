@@ -1,4 +1,5 @@
 import { useAuth } from "@/src/contexts/auth-context";
+import { usePost } from "@/src/contexts/post-context";
 import { useService } from "@/src/contexts/service-context";
 import { STATUS_OK } from "@/src/core/contants/axios-response-status";
 import { Post } from "@/src/models/post";
@@ -26,6 +27,8 @@ const PostCardFooter: React.FC<PostCardProps> = ({ post }) => {
 
   const [liked, setLiked] = useState(!!likedPost);
   const [likeCount, setLikeCount] = useState(post.likesCount ?? 0);
+
+  const { selectPost } = usePost();
 
   const heartIcon = liked ? (
     <AntDesignIcon
@@ -82,6 +85,10 @@ const PostCardFooter: React.FC<PostCardProps> = ({ post }) => {
     }
   }, [liked]);
 
+  const onLikeLongPress = useCallback(() => {
+    selectPost(post);
+  }, []);
+
   return (
     <Footer
       width="100%"
@@ -95,6 +102,7 @@ const PostCardFooter: React.FC<PostCardProps> = ({ post }) => {
         size="normal"
         textColor="primary"
         onPress={handleLikePost}
+        onLongPress={onLikeLongPress}
       />
       <Row alignItems="center" marginRight={rfValuePX(15)}>
         <Body>{post.timeSince}</Body>
