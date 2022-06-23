@@ -1,5 +1,7 @@
 import { useAuth } from "@/src/contexts/auth-context";
+import { usePost } from "@/src/contexts/post-context";
 import { useService } from "@/src/contexts/service-context";
+import { StyledMenuItem } from "@/src/modules/components/styled-menu-item";
 import { HomeStackNavProps } from "@/src/routes/home.routes";
 import { FeatherIcon } from "@/src/ui-components/icon";
 import IconButton from "@/src/ui-components/icon-button";
@@ -10,16 +12,60 @@ import { Body } from "@/src/ui-components/text/body";
 import { getExceptionFromError } from "@/src/utils/get-exception-from-error";
 import { rfValuePX } from "@/src/utils/responsive-fontsize";
 import { useNavigation } from "@react-navigation/core";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
+import { Alert } from "react-native";
+import { Menu } from "react-native-material-menu";
 import Toast from "react-native-root-toast";
 import { PostCardProps } from "../..";
 import { AvatarButton, AvatarButtonWrapper, AvatarImage } from "./styles";
 
 const PostCardHeader: React.FC<PostCardProps> = ({ post }) => {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const navigation = useNavigation<HomeStackNavProps>();
   const { serviceManager } = useService();
-  const { userService } = serviceManager;
+  const { fetchPosts } = usePost();
+  const { userService, postService } = serviceManager;
+
+  const [visible, setVisible] = useState(false);
+
+  const hideMenu = () => setVisible(false);
+
+  const showMenu = () => setVisible(true);
+
+  const handleDeletePost = useCallback(async () => {
+    try {
+      const result = await postService.deletePost({
+        id: post.id,
+        token: token ?? "",
+      });
+
+      if (result) {
+        Toast.show("Successfully deleted!");
+        fetchPosts({ limit: 10, page: 1, token: token ?? "" }, true);
+      }
+    } catch (error) {
+      const exception = getExceptionFromError(error);
+
+      Toast.show(exception.message);
+    }
+  }, []);
+
+  const deletePostOnPress = useCallback(async () => {
+    try {
+      Alert.alert("Confirmation", "Do you want to delete the post?", [
+        {
+          text: "NO",
+          onPress: () => {},
+          style: "cancel",
+        },
+        { text: "YES", onPress: handleDeletePost },
+      ]);
+    } catch (error) {
+      const exception = getExceptionFromError(error);
+
+      Toast.show(exception.message);
+    }
+  }, []);
 
   const renderProfileName = (
     <Body fontFamily="Roboto_700Bold" opacity={0.9}>
@@ -72,10 +118,23 @@ const PostCardHeader: React.FC<PostCardProps> = ({ post }) => {
             {renderUserName}
           </Column>
 
-          <IconButton
-            icon={<FeatherIcon name="more-vertical"></FeatherIcon>}
-            withBackgroundColor={false}
-          ></IconButton>
+          {post.user?.id === user?.id && (
+            <Menu
+              visible={visible}
+              anchor={
+                <IconButton
+                  onPress={showMenu}
+                  withBackgroundColor={false}
+                  icon={<FeatherIcon name="more-vertical"></FeatherIcon>}
+                ></IconButton>
+              }
+              onRequestClose={hideMenu}
+            >
+              <StyledMenuItem onPress={deletePostOnPress}>
+                Delete Post
+              </StyledMenuItem>
+            </Menu>
+          )}
         </Row>
 
         <LayoutContainer marginTop={rfValuePX(5)} />

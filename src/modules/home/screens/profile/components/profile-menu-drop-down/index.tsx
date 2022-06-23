@@ -8,7 +8,6 @@ import { Alert, View } from "react-native";
 import { Menu, MenuItem, MenuDivider } from "react-native-material-menu";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import Toast from "react-native-root-toast";
-import { StyledMenuItem } from "./styles";
 
 const ProfileMenuDropDown: React.FC = () => {
   const { cancelAccount, token } = useAuth();
@@ -57,7 +56,7 @@ const ProfileMenuDropDown: React.FC = () => {
       onRequestClose={hideMenu}
     >
       <StyledMenuItem onPress={cancelAccountOnPress}>
-        Cancelar Conta
+        Cancel Account
       </StyledMenuItem>
     </Menu>
   );

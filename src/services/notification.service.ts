@@ -14,7 +14,7 @@ class NotificationService extends BaseService {
   }: StoreFCMTokenProps): Promise<string | null> {
     try {
       const data = { fcmToken };
-      const response = await this.axiosAPI.post("/users/me/token", data, {
+      const response = await this.axiosAPI.post("/users/me/fcmtoken", data, {
         headers: getAuthorizationHeader(userToken),
       });
 

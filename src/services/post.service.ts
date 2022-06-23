@@ -1,4 +1,5 @@
 import { AxiosResponse } from "axios";
+import { STATUS_OK } from "../core/contants/axios-response-status";
 import {
   AxiosPaginationResult,
   FetchPaginationProps,
@@ -18,6 +19,11 @@ export interface FetchPostProps extends FetchPaginationProps {
 
 export interface StorePostProps {
   content: string;
+  token: string;
+}
+
+export interface DeletePostProps {
+  id: string;
   token: string;
 }
 
@@ -69,7 +75,18 @@ class PostService extends BaseService {
 
       return response.data as Post;
     } catch (error) {
-      console.log("ERROR - post.service - createPost");
+      throw getAxiosError(error);
+    }
+  }
+
+  async deletePost({ id, token }: DeletePostProps): Promise<boolean | null> {
+    try {
+      const response = await this.axiosAPI.delete(`/posts/${id}`, {
+        headers: getAuthorizationHeader(token),
+      });
+
+      return response.status === STATUS_OK;
+    } catch (error) {
       throw getAxiosError(error);
     }
   }
@@ -87,7 +104,6 @@ class PostService extends BaseService {
 
       return response;
     } catch (error) {
-      console.log("ERROR - post.service - likePost");
       throw getAxiosError(error);
     }
   }
@@ -105,7 +121,6 @@ class PostService extends BaseService {
 
       return response;
     } catch (error) {
-      console.log("ERROR - post.service - removePostLike");
       throw getAxiosError(error);
     }
   }
