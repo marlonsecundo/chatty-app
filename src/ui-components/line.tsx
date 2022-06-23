@@ -4,6 +4,7 @@ import { rfValuePX } from "../utils/responsive-fontsize";
 interface Props {
   height?: string;
   width?: string;
+  smargin?: string;
 }
 
 export const Line = styled.View<Props>`
@@ -11,4 +12,5 @@ export const Line = styled.View<Props>`
   width: ${({ width }) => width ?? "100%"};
   background-color: ${({ theme }) => theme.colors.border};
   border-radius: 2px;
+  margin: ${({ smargin }) => smargin ?? "0px"};
 `;

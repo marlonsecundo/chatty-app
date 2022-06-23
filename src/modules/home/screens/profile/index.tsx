@@ -1,6 +1,10 @@
 import { useAuth } from "@/src/contexts/auth-context";
 import { useService } from "@/src/contexts/service-context";
-import { HomeStackParamList } from "@/src/routes/home.routes";
+import {
+  HomeStackNavProps,
+  HomeStackParamList,
+} from "@/src/routes/home.routes";
+import { StyledRectButton } from "@/src/ui-components/icon-button/styles";
 import { Column } from "@/src/ui-components/layout/column";
 import { LayoutContainer } from "@/src/ui-components/layout/layout-container";
 import { Row } from "@/src/ui-components/layout/row";
@@ -9,13 +13,15 @@ import { Body } from "@/src/ui-components/text/body";
 import { Subheader } from "@/src/ui-components/text/subheader";
 import { formatStringDate } from "@/src/utils/format";
 import { getExceptionFromError } from "@/src/utils/get-exception-from-error";
-import { rfValuePX } from "@/src/utils/responsive-fontsize";
+import { rfPercentage, rfValuePX } from "@/src/utils/responsive-fontsize";
 import { UpdateProfileSchema } from "@/src/validators/profile.validator";
 import { RouteProp, useRoute } from "@react-navigation/core";
+import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Formik, FormikHelpers } from "formik";
 import React, { useCallback, useEffect, useState } from "react";
 import { RefreshControl, View } from "react-native";
+import { RectButton } from "react-native-gesture-handler";
 import Toast from "react-native-root-toast";
 import BackHeaderButton from "../components/back-header-button";
 import HeaderBar from "../components/header-bar";
@@ -28,6 +34,7 @@ import {
   ScrollViewWrapper,
   SubmitButton,
   Loading,
+  PostButton,
 } from "./styles";
 
 export interface ProfileFormValueProps {
@@ -51,6 +58,8 @@ const ProfileScreen: React.FC<Props> = ({ route }) => {
 
   const { user: loggedUser, token, updateUser } = useAuth();
   const [refreshing, setRefreshing] = React.useState(false);
+
+  const navigation = useNavigation<HomeStackNavProps>();
 
   const isLoggedUserView = user?.id === loggedUser?.id;
 
@@ -100,6 +109,13 @@ const ProfileScreen: React.FC<Props> = ({ route }) => {
     },
     [token]
   );
+
+  const handleOnPostPress = useCallback(() => {
+    navigation.push("Feed", {
+      withFooter: false,
+      userId: user?.id,
+    });
+  }, []);
 
   const rightHeaderContent = isLoggedUserView ? (
     <ProfileMenuDropDown />
@@ -168,19 +184,33 @@ const ProfileScreen: React.FC<Props> = ({ route }) => {
 
                 <Line height="1px"></Line>
 
-                <LayoutContainer smargin={rfValuePX(10)}></LayoutContainer>
-
-                <Row width="100%" justifyContent="space-evenly">
-                  <Column alignItems="center">
+                <Row
+                  width="100%"
+                  justifyContent="flex-start"
+                  height={rfPercentage(12) + "px"}
+                >
+                  <Column alignItems="center" width="50%" spadding="15px">
                     <Subheader>{user?.postLikesCount ?? "0"}</Subheader>
                     <Subheader>Likes</Subheader>
                   </Column>
 
-                  <Line width={rfValuePX(1)} height="100%"></Line>
-
-                  <Column alignItems="center">
-                    <Subheader>{user?.postsCount ?? "0"}</Subheader>
-                    <Subheader>Posts</Subheader>
+                  <Column
+                    alignItems="center"
+                    width="50%"
+                    height="100%"
+                    backgroundColor="red"
+                  >
+                    <PostButton onPress={handleOnPostPress}>
+                      <Column
+                        width="100%"
+                        height="100%"
+                        justifyContent="center"
+                        alignItems="center"
+                      >
+                        <Subheader>{user?.postsCount ?? "0"}</Subheader>
+                        <Subheader>Posts</Subheader>
+                      </Column>
+                    </PostButton>
                   </Column>
                 </Row>
               </ProfileWrapper>

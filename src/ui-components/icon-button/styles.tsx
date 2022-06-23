@@ -5,6 +5,9 @@ import { Row } from "../layout/row";
 
 export interface ButtonProps {
   withBackgroundColor?: boolean;
+  borderRadius?: string;
+  width?: string;
+  height?: string;
 }
 
 export const StyledRectButton = styled(RectButton).attrs<ButtonProps>(
@@ -18,7 +21,9 @@ export const StyledRectButton = styled(RectButton).attrs<ButtonProps>(
   background-color: ${({ theme, withBackgroundColor = true }) =>
     withBackgroundColor ? theme.colors.border : "transparent"};
 
-  border-radius: 100px;
+  border-radius: ${({ borderRadius }) => borderRadius ?? "100px"};
+  height: ${({ height }) => height ?? "auto"};
+  width: ${({ width }) => width ?? "auto"};
 `;
 
 export interface ContentWrapperProps {

@@ -23,6 +23,8 @@ interface ContainerProps {
   backgroundColor?: string;
 
   opacity?: string;
+
+  maxHeight?: string;
 }
 
 export const LayoutContainer = styled.View<ContainerProps>`
@@ -40,6 +42,7 @@ export const LayoutContainer = styled.View<ContainerProps>`
     sright,
     overflow,
     opacity,
+    maxHeight,
   }) => `
   margin: ${smargin ?? "0px"};
   justify-content: ${justifyContent ?? "flex-start"};
@@ -65,4 +68,5 @@ export const LayoutContainer = styled.View<ContainerProps>`
   ${({ marginRight }) => (marginRight ? ` margin-right: ${marginRight}` : "")};
   ${({ marginBottom }) =>
     marginBottom ? ` margin-bottom: ${marginBottom}` : ""};
+  ${({ maxHeight }) => (maxHeight ? ` max-height: ${maxHeight}` : "")};
 `;

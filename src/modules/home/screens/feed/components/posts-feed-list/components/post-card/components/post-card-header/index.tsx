@@ -38,7 +38,7 @@ const PostCardHeader: React.FC<PostCardProps> = ({ post }) => {
         userId: post.user?.id ?? "",
       });
 
-      navigation.navigate("Profile", { user });
+      navigation.push("Profile", { user });
     } catch (error) {
       const exception = getExceptionFromError(error);
       Toast.show(exception.message);

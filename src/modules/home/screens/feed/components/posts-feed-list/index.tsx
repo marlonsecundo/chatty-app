@@ -18,9 +18,10 @@ import { ListRenderItem, RefreshControl } from "react-native";
 
 interface Props {
   postId?: string;
+  userId?: string;
 }
 
-const PostsFeedList: React.FC<Props> = ({ postId }) => {
+const PostsFeedList: React.FC<Props> = ({ postId, userId }) => {
   const { token } = useContext(AuthContext);
   const { posts, fetchPosts, postPagResult } = usePost();
   const fistTimeRef = useRef(true);
@@ -29,9 +30,17 @@ const PostsFeedList: React.FC<Props> = ({ postId }) => {
   const [refreshing, setRefreshing] = React.useState(false);
 
   const handleFetchPosts = useCallback(
-    async (page: number, replace: boolean = false, id?: string) => {
+    async (
+      page: number,
+      replace: boolean = false,
+      id?: string,
+      userId?: string
+    ) => {
       try {
-        await fetchPosts({ token: token ?? "", page, limit: 10, id }, replace);
+        await fetchPosts(
+          { token: token ?? "", page, limit: 10, id, userId },
+          replace
+        );
       } catch (err) {
         const exception = getExceptionFromError(err);
 
@@ -66,8 +75,8 @@ const PostsFeedList: React.FC<Props> = ({ postId }) => {
   }, []);
 
   useEffect(() => {
-    handleFetchPosts(1, true, postId);
-  }, [postId]);
+    handleFetchPosts(1, true, postId, userId);
+  }, [postId, userId]);
 
   // If is the first time that fetch the posts and its your result is empty, so the user reached the end of the feed
   useEffect(() => {

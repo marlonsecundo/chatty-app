@@ -41,6 +41,14 @@ export const SubmitButton = styled(BorderlessButton)`
   padding: ${rfValue(15)}px 0px;
 `;
 
+export const PostButton = styled(BorderlessButton)`
+  background-color: ${({ theme }) => theme.colors.border};
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+`;
+
 export const ProfileWrapper = styled(LayoutContainer)``;
 
 export const ScrollViewWrapper = styled.ScrollView``;

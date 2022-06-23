@@ -15,12 +15,16 @@ import PostLikesBottomSheet from "./components/post-likes-bottom-sheet";
 
 export interface FeedScreenProps {
   postId?: string;
+  userId?: string;
+  withFooter?: boolean;
 }
 
 type Props = NativeStackScreenProps<HomeStackParamList, "Feed">;
 
 const FeedScreen: React.FC<Props> = ({ route }) => {
   const postId = route.params?.postId;
+  const userId = route.params?.userId;
+  const withFooter = route.params?.withFooter ?? true;
 
   return (
     <PostProvider>
@@ -30,8 +34,8 @@ const FeedScreen: React.FC<Props> = ({ route }) => {
           title="Feed"
           rightContent={<ProfileButton></ProfileButton>}
         ></HeaderBar>
-        <PostsFeedList postId={postId}></PostsFeedList>
-        <Footer></Footer>
+        <PostsFeedList userId={userId} postId={postId}></PostsFeedList>
+        {withFooter && <Footer></Footer>}
       </Column>
       <PostLikesBottomSheet></PostLikesBottomSheet>
     </PostProvider>

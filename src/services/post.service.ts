@@ -13,6 +13,7 @@ import BaseService from "./base-service";
 export interface FetchPostProps extends FetchPaginationProps {
   token: string;
   id?: string;
+  userId?: string;
 }
 
 export interface StorePostProps {
@@ -36,6 +37,7 @@ class PostService extends BaseService {
     page,
     limit,
     id,
+    userId,
   }: FetchPostProps): AxiosPaginationResult<Post> {
     try {
       const response = await this.axiosAPI.get<PaginationResult<Post>>(
@@ -45,6 +47,7 @@ class PostService extends BaseService {
             page,
             limit,
             id,
+            userId,
           },
           headers: getAuthorizationHeader(token),
         }
