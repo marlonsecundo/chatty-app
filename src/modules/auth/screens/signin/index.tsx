@@ -15,6 +15,7 @@ const SignInScreen: React.FC = () => {
   return (
     <Center width="100%" height="100%">
       <Headline size="50">😉</Headline>
+
       <LayoutContainer height={rfValuePX(15)} />
       <Headline size="36">CHATTY</Headline>
 

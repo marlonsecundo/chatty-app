@@ -13,6 +13,7 @@ import { ServiceProvider } from "./src/contexts/service-context";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import { useAppConfig } from "./src/contexts/app-config-context";
+import NetStatusBottomBar from "./src/modules/components/net-status-bottom-bar";
 
 export default function App() {
   const { isAllLoadingDone } = useAppConfig();
@@ -30,6 +31,7 @@ export default function App() {
             <AuthProvider>
               <GestureHandlerRootView style={{ flex: 1 }}>
                 <Routes></Routes>
+                <NetStatusBottomBar></NetStatusBottomBar>
               </GestureHandlerRootView>
             </AuthProvider>
           </SafeAreaProvider>
