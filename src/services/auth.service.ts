@@ -87,8 +87,6 @@ class AuthService extends BaseService {
 
       return response.data;
     } catch (err: AxiosError | unknown) {
-      console.log("ERROR - auth.service - getUser");
-
       throw getAxiosError(err);
     }
   }

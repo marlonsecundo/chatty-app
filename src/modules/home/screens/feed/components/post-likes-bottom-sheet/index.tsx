@@ -44,6 +44,8 @@ const PostLikesBottomSheet: React.FC = ({}) => {
 
   const { selectedPost, selectPost } = usePost();
 
+  const fistTimeRef = useRef(true);
+
   const handleFetchPostsLikes = useCallback(
     async (page: number, reset?: boolean) => {
       try {
@@ -100,10 +102,19 @@ const PostLikesBottomSheet: React.FC = ({}) => {
       text="Wow! Seens that you reached the end of the comments!"
     ></ListEnd>
   ) : (
-    <LoadingPosts text="Loading new comments" lightColors={true}></LoadingPosts>
+    <LoadingPosts text="Loading new likes" lightColors={true}></LoadingPosts>
   );
 
-  useEffect(() => {}, []);
+  // If is the first time that fetch the posts and its your result is empty, so the user reached the end of the feed
+  useEffect(() => {
+    if (fistTimeRef.current) {
+      if (postLikes.length < 1) {
+        setReachedTheEnd(true);
+      }
+    }
+
+    fistTimeRef.current = false;
+  }, [postLikes]);
 
   useEffect(() => {
     if (selectedPost) {
@@ -125,6 +136,7 @@ const PostLikesBottomSheet: React.FC = ({}) => {
       <BottomSheetFlatList
         style={{ flex: 1 }}
         data={postLikes}
+        keyExtractor={(item) => item.userId + ""}
         renderItem={renderItem}
         onEndReached={handleOnReachEnd}
         onEndReachedThreshold={0.05}

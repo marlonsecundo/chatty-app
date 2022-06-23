@@ -1,6 +1,8 @@
 import { useAuth } from "@/src/contexts/auth-context";
 import { useService } from "@/src/contexts/service-context";
 import { HomeStackNavProps } from "@/src/routes/home.routes";
+import { FeatherIcon } from "@/src/ui-components/icon";
+import IconButton from "@/src/ui-components/icon-button";
 import { Column } from "@/src/ui-components/layout/column";
 import { LayoutContainer } from "@/src/ui-components/layout/layout-container";
 import { Row } from "@/src/ui-components/layout/row";
@@ -70,10 +72,10 @@ const PostCardHeader: React.FC<PostCardProps> = ({ post }) => {
             {renderUserName}
           </Column>
 
-          {/* <IconButton
+          <IconButton
             icon={<FeatherIcon name="more-vertical"></FeatherIcon>}
             withBackgroundColor={false}
-          ></IconButton> */}
+          ></IconButton>
         </Row>
 
         <LayoutContainer marginTop={rfValuePX(5)} />

@@ -15,6 +15,8 @@ import { useNavigation } from "@react-navigation/native";
 import { useService } from "../contexts/service-context";
 import { useAuth } from "../contexts/auth-context";
 import { useAppConfig } from "../contexts/app-config-context";
+import { getExceptionFromError } from "../utils/get-exception-from-error";
+import Toast from "react-native-root-toast";
 
 export type HomeStackParamList = {
   Feed?: FeedScreenProps;
@@ -41,7 +43,18 @@ function HomeStackRoutes() {
 
   useEffect(() => {
     const disposer = handleNotificationOpenedApp(navigation);
-    handleMessageToken(notificationService, token ?? "");
+    async function handleAsync() {
+      try {
+        await handleMessageToken(notificationService, token ?? "");
+      } catch (err) {
+        const exception = getExceptionFromError(err);
+
+        Toast.show(exception.message);
+      }
+    }
+
+    handleAsync();
+
     return disposer;
   }, []);
 
