@@ -102,6 +102,7 @@ export const NotificationProvider: React.FC = ({ children }) => {
   const init = useCallback(async () => {
     const status = await messaging().requestPermission();
     await handleInitialNotification();
+    messaging().setBackgroundMessageHandler(async () => {});
 
     setNotificationLoaded(true);
   }, []);

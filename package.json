@@ -7,7 +7,7 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "share-backend-port": "adb reverse tcp:3333 tcp:3333",
+    "share-backend-port": "adb reverse tcp:41447 tcp:41447",
     "emulator": "nohup emulator -avd pixel_4_30 >/dev/null &"
   },
   "dependencies": {

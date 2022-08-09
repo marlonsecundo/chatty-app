@@ -6,6 +6,7 @@ class API {
   axiosApi!: AxiosInstance;
 
   init = async (envs: DotEnv) => {
+    console.log({ API: envs.API_URL });
     this.axiosApi = axios.create({
       baseURL: envs.API_URL,
     });

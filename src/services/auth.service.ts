@@ -60,6 +60,8 @@ class AuthService extends BaseService {
 
       const appRedirectUrl = Linking.createURL("");
 
+      console.log(this.axiosAPI.defaults.baseURL);
+
       const url = `${this.axiosAPI.defaults
         .baseURL!}/google/redirect?appRedirectUri=${appRedirectUrl}`;
 

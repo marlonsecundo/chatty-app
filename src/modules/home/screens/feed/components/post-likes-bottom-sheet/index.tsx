@@ -32,7 +32,6 @@ const PostLikesBottomSheet: React.FC = ({}) => {
   }, []);
 
   const [reachedTheEnd, setReachedTheEnd] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
 
   const [postLikesPagResult, setPostLikesPagResult] =
     useState<PaginationResult<PostLike> | null>(null);
@@ -47,13 +46,13 @@ const PostLikesBottomSheet: React.FC = ({}) => {
   const fistTimeRef = useRef(true);
 
   const handleFetchPostsLikes = useCallback(
-    async (page: number, reset?: boolean) => {
+    async (postId, page: number, reset?: boolean) => {
       try {
         const result = await postService.fetchPostsLikes({
           token: token ?? "",
           page,
           limit: 8,
-          postId: selectedPost?.id ?? "",
+          postId: postId ?? "",
         });
 
         setPostLikesPagResult(result);
@@ -70,6 +69,10 @@ const PostLikesBottomSheet: React.FC = ({}) => {
           });
         }
       } catch (err) {
+        if (reset) {
+          setPostLikes([]);
+        }
+
         const exception = getExceptionFromError(err);
 
         Toast.show(exception.message);
@@ -89,8 +92,11 @@ const PostLikesBottomSheet: React.FC = ({}) => {
 
     if (!postLikesPagResult?.meta.currentPage) return;
 
-    handleFetchPostsLikes(postLikesPagResult?.meta.currentPage + 1);
-  }, [postLikesPagResult]);
+    handleFetchPostsLikes(
+      selectedPost?.id,
+      postLikesPagResult?.meta.currentPage + 1
+    );
+  }, [postLikesPagResult, selectedPost]);
 
   const renderItem: ListRenderItem<PostLike> = useCallback(({ item }) => {
     return <PostLikeCard key={item.userId} postLike={item}></PostLikeCard>;
@@ -99,7 +105,7 @@ const PostLikesBottomSheet: React.FC = ({}) => {
   const listFooterComp = reachedTheEnd ? (
     <ListEnd
       lightColors={true}
-      text="Wow! Seens that you reached the end of the comments!"
+      text="Wow! Seens that you reached the end of the likes!"
     ></ListEnd>
   ) : (
     <LoadingPosts text="Loading new likes" lightColors={true}></LoadingPosts>
@@ -120,7 +126,7 @@ const PostLikesBottomSheet: React.FC = ({}) => {
     if (selectedPost) {
       bottomSheetRef.current?.expand();
 
-      handleFetchPostsLikes(1, true);
+      handleFetchPostsLikes(selectedPost.id, 1, true);
     }
   }, [selectedPost]);
 
