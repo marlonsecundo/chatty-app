@@ -19,7 +19,7 @@ export interface StorePostFormValueProps {
 }
 
 const FeedFooter: React.FC = () => {
-  const { storePost } = usePost();
+  const { storePost, fetchPosts } = usePost();
   const { token } = useAuth();
 
   const [inputVisible, setInputVisible] = useState(false);
@@ -35,9 +35,9 @@ const FeedFooter: React.FC = () => {
           token: token ?? "",
         });
 
-        setInputVisible(false);
-
         actions.resetForm();
+
+        setInputVisible(false);
       } catch (err) {
         const exception = getExceptionFromError(err);
 
@@ -99,9 +99,12 @@ const FeedFooter: React.FC = () => {
                   withBackgroundColor={false}
                   onPress={() => {
                     if (!inputVisible) {
+                      setErrors({ content: "" });
+
                       setInputVisible(true);
                       return;
                     }
+
                     if (!isSubmitting) handleSubmit();
                   }}
                   icon={<FeatherIcon name="send"></FeatherIcon>}

@@ -68,7 +68,9 @@ export const PostProvider: React.FC = ({ children }) => {
 
       if (!post) throw NullException({ message: "Post Null" });
 
-      setPosts((prevPosts) => [post, ...prevPosts]);
+      await fetchPosts({ limit: 10, page: 1, token: args.token ?? "" }, true);
+
+      // setPosts((prevPosts) => [post, ...prevPosts]);
 
       return post;
     } catch (err) {
