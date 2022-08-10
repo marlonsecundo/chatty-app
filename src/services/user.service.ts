@@ -17,7 +17,6 @@ class UserService extends BaseService {
 
       return response.data as User;
     } catch (error) {
-      console.log("ERROR - user.service - showUser");
       throw getAxiosError(error);
     }
   }

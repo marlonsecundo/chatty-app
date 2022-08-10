@@ -60,8 +60,6 @@ class AuthService extends BaseService {
 
       const appRedirectUrl = Linking.createURL("");
 
-      console.log(this.axiosAPI.defaults.baseURL);
-
       const url = `${this.axiosAPI.defaults
         .baseURL!}/google/redirect?appRedirectUri=${appRedirectUrl}`;
 
@@ -73,8 +71,6 @@ class AuthService extends BaseService {
 
       return userToken;
     } catch (err) {
-      console.log("ERROR - auth.service - getUserTokenWithGoogle");
-
       throw getAxiosError(err);
     }
   }
@@ -108,8 +104,6 @@ class AuthService extends BaseService {
 
       return response.data;
     } catch (err: AxiosError | unknown) {
-      console.log("ERROR - auth.service - updateUser");
-
       throw getAxiosError(err);
     }
   }
@@ -122,8 +116,6 @@ class AuthService extends BaseService {
 
       return response;
     } catch (err: AxiosError | unknown) {
-      console.log("ERROR - auth.service - logoutUser");
-
       throw getAxiosError(err);
     }
   }
@@ -136,7 +128,6 @@ class AuthService extends BaseService {
 
       return response;
     } catch (err: AxiosError | unknown) {
-      console.log("ERROR - auth.service - cancelAccount");
       throw getAxiosError(err);
     }
   }

@@ -61,7 +61,6 @@ class PostService extends BaseService {
 
       return response.data;
     } catch (error) {
-      console.log({ error });
       throw getAxiosError(error);
     }
   }
