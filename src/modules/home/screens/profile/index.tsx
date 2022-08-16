@@ -186,6 +186,7 @@ const ProfileScreen: React.FC<Props> = ({ route }) => {
                     textAlign="center"
                     formValueKey="description"
                     multiline={true}
+                    editable={isLoggedUserView}
                   ></TextProfileFormInput>
                 </LayoutContainer>
 
