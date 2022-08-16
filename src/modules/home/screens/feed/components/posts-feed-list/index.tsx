@@ -89,11 +89,12 @@ const PostsFeedList: React.FC<Props> = ({ postId, userId }) => {
     fistTimeRef.current = false;
   }, [posts]);
 
-  const listFooterComp = reachedTheEnd ? (
-    <ListEnd></ListEnd>
-  ) : (
-    <LoadingPosts></LoadingPosts>
-  );
+  const listFooterComp =
+    reachedTheEnd || (posts.length === 0 && !refreshing) ? (
+      <ListEnd></ListEnd>
+    ) : (
+      <LoadingPosts></LoadingPosts>
+    );
 
   return (
     <FeedWrapper>

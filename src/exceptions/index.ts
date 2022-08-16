@@ -1,11 +1,17 @@
 export const EXCEPTION_TYPE = "EXCEPTION";
 
+interface APIResponseError {
+  rule: string;
+  field: string;
+  message: string;
+}
 export interface Exception {
   itype?: "EXCEPTION";
   code?: string;
   message: string;
   name?: string;
   data?: any;
+  errors: APIResponseError[];
 }
 
 export function NullException(args: Exception): Exception {

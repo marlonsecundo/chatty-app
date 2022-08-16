@@ -8,7 +8,8 @@ export default function getAxiosError(err: any) {
     return AxiosRequestException({
       message: axiosError.toString(),
       code: axiosError.response?.status?.toString() ?? "",
-      data: axiosError,
+      data: axiosError.response?.data,
+      errors: axiosError.response?.data?.errors,
     });
   }
 

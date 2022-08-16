@@ -103,7 +103,7 @@ class AuthService extends BaseService {
       );
 
       return response.data;
-    } catch (err: AxiosError | unknown) {
+    } catch (err: AxiosError | any) {
       throw getAxiosError(err);
     }
   }

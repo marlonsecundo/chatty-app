@@ -104,6 +104,13 @@ const ProfileScreen: React.FC<Props> = ({ route }) => {
         Toast.show("Updated!");
       } catch (err) {
         const exception = getExceptionFromError(err);
+
+        if (exception.errors != undefined && exception.errors.length > 0) {
+          Toast.show(exception.errors[0].message);
+
+          return;
+        }
+
         Toast.show(exception.message);
       }
     },
