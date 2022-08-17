@@ -11,7 +11,7 @@ export interface Exception {
   message: string;
   name?: string;
   data?: any;
-  errors: APIResponseError[];
+  errors?: APIResponseError[];
 }
 
 export function NullException(args: Exception): Exception {

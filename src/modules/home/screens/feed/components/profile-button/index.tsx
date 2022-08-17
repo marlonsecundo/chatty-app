@@ -10,7 +10,7 @@ const ProfileButton: React.FC = () => {
 
   const onProfilePress = useCallback(() => {
     navigation.push("Profile", { user: user });
-  }, []);
+  }, [user]);
 
   return (
     <StyledButton onPress={onProfilePress}>

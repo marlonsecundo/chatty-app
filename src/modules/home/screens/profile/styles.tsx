@@ -34,13 +34,6 @@ export const UsernameText = styled(Body)`
   opacity: 0.7;
 `;
 
-export const SubmitButton = styled(BorderlessButton)`
-  background-color: ${({ theme }) => theme.colors.border};
-  justify-content: center;
-  align-items: center;
-  padding: ${rfValue(15)}px 0px;
-`;
-
 export const PostButton = styled(BorderlessButton)`
   background-color: ${({ theme }) => theme.colors.border};
   justify-content: center;

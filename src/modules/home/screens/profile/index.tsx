@@ -1,5 +1,6 @@
 import { useAuth } from "@/src/contexts/auth-context";
 import { useService } from "@/src/contexts/service-context";
+import { SubmitButton } from "@/src/modules/components/submit-button";
 import {
   HomeStackNavProps,
   HomeStackParamList,
@@ -32,7 +33,6 @@ import {
   ProfileWrapper,
   UsernameText,
   ScrollViewWrapper,
-  SubmitButton,
   Loading,
   PostButton,
 } from "./styles";
