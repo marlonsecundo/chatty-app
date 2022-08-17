@@ -101,6 +101,18 @@ const ProfileScreen: React.FC<Props> = ({ route }) => {
           },
         });
 
+        setUser((prevUser) => {
+          return {
+            ...prevUser,
+            username: updatedData.username,
+            profile: {
+              ...prevUser?.profile,
+              description: updatedData.profile.description,
+              name: updatedData.profile.name,
+            },
+          };
+        });
+
         Toast.show("Updated!");
       } catch (err) {
         const exception = getExceptionFromError(err);
