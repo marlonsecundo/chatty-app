@@ -69,10 +69,10 @@ const PostsFeedList: React.FC<Props> = ({ postId, userId }) => {
     setRefreshing(true);
     setReachedTheEnd(false);
 
-    await handleFetchPosts(1, true);
+    await handleFetchPosts(1, true, postId, userId);
 
     setRefreshing(false);
-  }, []);
+  }, [postId, userId]);
 
   useEffect(() => {
     handleFetchPosts(1, true, postId, userId);
