@@ -3,4 +3,6 @@ import {
   RFValue as rfValue,
 } from "react-native-responsive-fontsize";
 
-export { rfPercentage, rfValue };
+const rfValuePX = (value: number) => `${rfValue(value)}px`;
+
+export { rfPercentage, rfValue, rfValuePX };

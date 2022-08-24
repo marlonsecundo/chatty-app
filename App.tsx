@@ -1,8 +1,5 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
 import { ThemeProvider } from "styled-components";
-import { useFonts } from "expo-font";
 import AppLoading from "expo-app-loading";
 
 import theme from "./src/styles/theme";
@@ -10,31 +7,36 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import Routes from "./src/routes";
 import { AuthProvider } from "./src/contexts/auth-context";
 
-export default function App() {
-  let [fontsLoaded] = useFonts({
-    "FantasqueSansMono-Regular": require("./assets/fonts/FantasqueSansMono-Regular.ttf"),
-  });
+import { RootSiblingParent } from "react-native-root-siblings";
+import ServiceManager from "./src/services/service-manager";
+import { ServiceProvider } from "./src/contexts/service-context";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { StatusBar } from "expo-status-bar";
+import { useAppConfig } from "./src/contexts/app-config-context";
+import NetStatusBottomBar from "./src/modules/components/net-status-bottom-bar";
 
-  if (!fontsLoaded) {
+export default function App() {
+  const { isAllLoadingDone } = useAppConfig();
+
+  if (!isAllLoadingDone) {
     return <AppLoading />;
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <SafeAreaProvider>
-        <AuthProvider>
-          <Routes></Routes>
-        </AuthProvider>
-      </SafeAreaProvider>
-    </ThemeProvider>
+    <RootSiblingParent>
+      <ThemeProvider theme={theme}>
+        <StatusBar style="dark" />
+        <ServiceProvider serviceManager={ServiceManager.getI()}>
+          <SafeAreaProvider>
+            <AuthProvider>
+              <GestureHandlerRootView style={{ flex: 1 }}>
+                <Routes></Routes>
+                <NetStatusBottomBar></NetStatusBottomBar>
+              </GestureHandlerRootView>
+            </AuthProvider>
+          </SafeAreaProvider>
+        </ServiceProvider>
+      </ThemeProvider>
+    </RootSiblingParent>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

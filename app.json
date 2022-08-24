@@ -1,9 +1,9 @@
 {
   "expo": {
     "owner": "marlon_secundo",
-    "name": "chatty",
-    "slug": "chatty-app",
     "scheme": "chatty",
+    "name": "chatty-app",
+    "slug": "chatty-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -23,11 +23,12 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.marlonsecundo.chatty",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "extra": {}
+    }
   }
 }

@@ -1,19 +1,81 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import FeedScreen from "../modules/home/screens/feed";
+import {
+  createNativeStackNavigator,
+  NativeStackNavigationProp,
+} from "@react-navigation/native-stack";
+import FeedScreen, { FeedScreenProps } from "../modules/home/screens/feed";
+import ProfileScreen, {
+  ProfileScreenProps,
+} from "../modules/home/screens/profile";
+import { View } from "react-native";
+import styled from "styled-components/native";
+import { useNotification } from "../contexts/notification-context";
+import { useNavigation } from "@react-navigation/native";
+import { useService } from "../contexts/service-context";
+import { useAuth } from "../contexts/auth-context";
+import { useAppConfig } from "../contexts/app-config-context";
+import { getExceptionFromError } from "../utils/get-exception-from-error";
+import Toast from "react-native-root-toast";
 
-const Stack = createNativeStackNavigator();
+export type HomeStackParamList = {
+  Feed?: FeedScreenProps;
+  Profile?: ProfileScreenProps;
+};
+
+const Stack = createNativeStackNavigator<HomeStackParamList>();
+
+export type HomeStackNavProps = NativeStackNavigationProp<HomeStackParamList>;
+
+const BackgroundRootView = styled.View`
+  background-color: ${({ theme }) => theme.colors.background};
+  flex: 1;
+`;
 
 function HomeStackRoutes() {
+  const { handleNotificationOpenedApp, handleMessageToken } = useNotification();
+  const { initialRoute } = useAppConfig();
+  const { token } = useAuth();
+  const { serviceManager } = useService();
+  const { notificationService } = serviceManager;
+
+  const navigation = useNavigation<HomeStackNavProps>();
+
+  useEffect(() => {
+    const disposer = handleNotificationOpenedApp(navigation);
+    async function handleAsync() {
+      try {
+        await handleMessageToken(notificationService, token ?? "");
+      } catch (err) {
+        const exception = getExceptionFromError(err);
+
+        Toast.show(exception.message);
+      }
+    }
+
+    handleAsync();
+
+    return disposer;
+  }, []);
+
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Feed"
-        component={FeedScreen}
-        options={{ header: () => null }}
-      />
-    </Stack.Navigator>
+    <BackgroundRootView>
+      <Stack.Navigator
+        initialRouteName={initialRoute}
+        defaultScreenOptions={{}}
+      >
+        <Stack.Screen
+          name="Feed"
+          component={FeedScreen}
+          options={{ header: () => null }}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{ header: () => null }}
+        />
+      </Stack.Navigator>
+    </BackgroundRootView>
   );
 }
 
