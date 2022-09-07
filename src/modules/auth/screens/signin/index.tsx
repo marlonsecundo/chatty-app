@@ -1,16 +1,35 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { View } from "react-native";
 
 import { Center } from "@/src/ui-components/layout/center";
-import AuthContext from "@/src/contexts/auth-context";
+import AuthContext, { useAuth } from "@/src/contexts/auth-context";
 import { Headline } from "@/src/ui-components/text/headline";
 import IconButton from "@/src/ui-components/icon-button";
 import { LayoutContainer } from "@/src/ui-components/layout/layout-container";
 import { rfValuePX } from "@/src/utils/responsive-fontsize";
 import { AntDesignIcon } from "@/src/ui-components/icon";
+import { getExceptionFromError } from "@/src/utils/get-exception-from-error";
+import Toast from "react-native-root-toast";
 
 const SignInScreen: React.FC = () => {
-  const { signUserWithGoogle } = useContext(AuthContext);
+  const { signUserWithGoogle, authenticateUser } = useAuth();
+
+  const { token } = useAuth();
+
+  async function authUser() {
+    try {
+      if (token === null || token === "" || token === undefined) return;
+
+      await authenticateUser(token);
+    } catch (error) {
+      const exception = getExceptionFromError(error);
+      Toast.show(exception.message);
+    }
+  }
+
+  useEffect(() => {
+    authUser();
+  }, [token]);
 
   return (
     <Center width="100%" height="100%">

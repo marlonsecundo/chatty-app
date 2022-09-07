@@ -26,6 +26,7 @@ interface AuthContextProps {
     token: string,
     data: UpdateUserProps
   ) => Promise<UpdateUserProps>;
+  authenticateUser: (userToken: string) => Promise<void>;
   logoutUser: (args: LogoutUserProps) => Promise<AxiosResponse>;
   cancelAccount: (args: CancelAccountProps) => Promise<AxiosResponse>;
 }
@@ -45,24 +46,24 @@ export const AuthProvider: React.FC = ({ children }) => {
     await asyncStorageService.removeAsyncStorageData("@USER_TOKEN");
   }, []);
 
+  const authenticateUser = useCallback(async (userToken: string) => {
+    const loggedUser = await authService.getUser(userToken);
+
+    if (!loggedUser)
+      throw NullException({ message: "Failed to load the user" });
+
+    setUser(loggedUser);
+
+    await asyncStorageService.storeAsyncStorageData({
+      key: "@USER_TOKEN",
+      value: userToken,
+    });
+  }, []);
+
   const signUserWithGoogle = useCallback(async () => {
     try {
-      const userToken = await authService.getUserTokenWithGoogle();
-
-      if (!userToken)
-        throw NullException({ message: "signUserWithGoogle - Token Null" });
-
-      const loggedUser = await authService.getUser(userToken);
-
-      if (!loggedUser)
-        throw NullException({ message: "signUserWithGoogle - User Null" });
-
-      setToken(userToken);
-      setUser(loggedUser);
-
-      await asyncStorageService.storeAsyncStorageData({
-        key: "@USER_TOKEN",
-        value: userToken,
+      await authService.fetchUserTokenWithGoogle(async function (userToken) {
+        setToken(userToken);
       });
     } catch (error) {
       throw error;
@@ -157,6 +158,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         cancelAccount,
         token,
         user,
+        authenticateUser,
       }}
     >
       {children}

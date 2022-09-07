@@ -1,6 +1,6 @@
-import * as WebBrowser from "expo-web-browser";
-import * as Linking from "expo-linking";
-import { AxiosRequestException, NullException } from "../exceptions";
+import { Linking } from "react-native";
+
+import { AxiosRequestException, Exception, NullException } from "../exceptions";
 import Constants from "expo-constants";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import getAxiosError from "../utils/get-axios-error";
@@ -24,52 +24,43 @@ export interface CancelAccountProps {
   token: string;
 }
 
-WebBrowser.maybeCompleteAuthSession();
-
 class AuthService extends BaseService {
-  async getUserTokenWithGoogle(): Promise<string | null> {
-    let userToken: string | null = null;
-
+  async fetchUserTokenWithGoogle(
+    onFetchToken: (tokenParam: string) => void
+  ): Promise<void> {
     function handleTokenInUrl({ url }: { url: string }) {
       if (url.includes("token")) {
         const [_, tokenUrl] = url.split("?token=");
 
         const [token] = tokenUrl.split("&");
 
-        userToken = token;
+        Linking.removeEventListener("url", handleTokenInUrl);
+
+        onFetchToken(token);
       }
     }
 
-    // Wait to the Linking.addEventListener get the token
-    async function holdForUrl() {
-      await new Promise<string | null>((resolve, reject) => {
-        let intervalCount = 0;
-        const refreshIntervalId = setInterval(() => {
-          intervalCount += 1;
-
-          if (userToken || intervalCount > 3) {
-            clearInterval(refreshIntervalId);
-            resolve(userToken);
-          }
-        }, 300);
-      });
-    }
-
     try {
+      Linking.removeEventListener("url", handleTokenInUrl);
       Linking.addEventListener("url", handleTokenInUrl);
 
-      const appRedirectUrl = Linking.createURL("");
+      const appRedirectUrl = await Linking.getInitialURL();
 
       const url = `${this.axiosAPI.defaults
         .baseURL!}/google/redirect?appRedirectUri=${appRedirectUrl}`;
 
-      await WebBrowser.openAuthSessionAsync(url, appRedirectUrl);
+      const supported = await Linking.canOpenURL(url);
 
-      await holdForUrl();
+      if (!supported) {
+        const ex: Exception = {
+          message: "Link not suporterd",
+          itype: "EXCEPTION",
+        };
 
-      Linking.removeEventListener("url", handleTokenInUrl);
+        throw ex;
+      }
 
-      return userToken;
+      await Linking.openURL(url);
     } catch (err) {
       throw getAxiosError(err);
     }
