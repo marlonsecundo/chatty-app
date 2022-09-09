@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import { View } from "react-native";
 
 import { Center } from "@/src/ui-components/layout/center";
@@ -15,6 +15,15 @@ const SignInScreen: React.FC = () => {
   const { signUserWithGoogle, authenticateUser } = useAuth();
 
   const { token } = useAuth();
+
+  const handleSigninButton = useCallback(async () => {
+    try {
+      await signUserWithGoogle();
+    } catch (error) {
+      const exception = getExceptionFromError(error);
+      Toast.show(exception.message);
+    }
+  }, []);
 
   async function authUser() {
     try {
@@ -47,7 +56,7 @@ const SignInScreen: React.FC = () => {
           icon={<AntDesignIcon name="google"></AntDesignIcon>}
           text="ENTRAR"
           size="big"
-          onPress={signUserWithGoogle}
+          onPress={handleSigninButton}
         ></IconButton>
       </LayoutContainer>
     </Center>

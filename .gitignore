@@ -79,3 +79,5 @@ dist/
 google-services.json
 
 .aab
+
+eas.json

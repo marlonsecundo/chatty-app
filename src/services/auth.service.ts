@@ -1,4 +1,5 @@
 import { Linking } from "react-native";
+import * as ExpoLinking from "expo-linking";
 
 import { AxiosRequestException, Exception, NullException } from "../exceptions";
 import Constants from "expo-constants";
@@ -41,19 +42,20 @@ class AuthService extends BaseService {
     }
 
     try {
-      Linking.removeEventListener("url", handleTokenInUrl);
+      // Linking.removeEventListener("url", handleTokenInUrl);
       Linking.addEventListener("url", handleTokenInUrl);
 
-      const appRedirectUrl = await Linking.getInitialURL();
+      const appRedirectUrl = ExpoLinking.createURL("");
 
-      const url = `${this.axiosAPI.defaults
-        .baseURL!}/google/redirect?appRedirectUri=${appRedirectUrl}`;
+      const url = `${
+        this.axiosAPI.defaults.baseURL ?? "https://error"
+      }/google/redirect?appRedirectUri=${appRedirectUrl}`;
 
       const supported = await Linking.canOpenURL(url);
 
       if (!supported) {
         const ex: Exception = {
-          message: "Link not suporterd",
+          message: "Link not suporterd, " + url,
           itype: "EXCEPTION",
         };
 
