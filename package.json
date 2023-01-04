@@ -8,7 +8,7 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "share-backend-port": "adb reverse tcp:3333 tcp:3333",
-    "emulator": "nohup emulator -avd pixel_4_30 >/dev/null &"
+    "emulator": "nohup emulator -avd android_33 >/dev/null &"
   },
   "dependencies": {
     "@expo-google-fonts/roboto": "^0.2.2",
