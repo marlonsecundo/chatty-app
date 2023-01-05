@@ -4,7 +4,7 @@
     "scheme": "chatty",
     "name": "chatty-app",
     "slug": "chatty-app",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -29,6 +29,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "fe4b7ddb-40f8-4d98-aa42-a9770690bced"
+      }
     }
   }
 }
