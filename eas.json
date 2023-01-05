@@ -14,12 +14,19 @@
       }
     },
     "preview": {
+      "env": {
+        "API_URL": "https://marlon-chatty.fly.dev"
+      },
       "distribution": "internal",
       "android": {
         "buildType": "apk"
       }
     },
-    "production": {}
+    "production": {
+      "env": {
+        "API_URL": "https://marlon-chatty.fly.dev"
+      }
+    }
   },
   "submit": {
     "production": {}
